@@ -1,0 +1,16 @@
+{
+  "name": "nuxeo-webcomponents",
+  "version": "0.0.1",
+  "authors": [
+    "Nelson Silva <nsilva@nuxeo.com>"
+  ],
+  "description": "Nuxeo Web Components",
+  "license": "LGPL",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.1",
+    "core-elements": "Polymer/core-elements#^0.5.1",
+    "nuxeo": "^0.4.1",
+    "es6-promise": "^2.0.0"
+  }
+}

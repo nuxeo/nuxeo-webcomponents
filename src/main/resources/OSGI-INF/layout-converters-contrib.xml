@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<component name="org.nuxeo.ecm.platform.webcomponents.layout.converters">
+
+  <extension target="org.nuxeo.ecm.platform.forms.layout.LayoutStore"
+    point="widgetConverters">
+
+    <widgetConverter name="nameToTag" order="10">
+      <categories>
+        <category>webcomponents</category>
+      </categories>
+      <converter-class>
+        org.nuxeo.ecm.platform.webcomponents.layout.converters.WidgetToTagConverter
+      </converter-class>
+    </widgetConverter>
+
+  </extension>
+
+  <extension target="org.nuxeo.ecm.platform.forms.layout.LayoutStore"
+             point="layoutConverters">
+
+    <layoutConverter name="nameToTag" order="10">
+      <categories>
+        <category>webcomponents</category>
+      </categories>
+      <converter-class>
+        org.nuxeo.ecm.platform.webcomponents.layout.converters.LayoutToTagConverter
+      </converter-class>
+    </layoutConverter>
+
+  </extension>
+
+</component>

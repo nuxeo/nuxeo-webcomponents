@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.platform.webcomponents.layout.widgettypes">
+
+<extension target="org.nuxeo.ecm.platform.forms.layout.LayoutStore"
+           point="widgettypes">
+
+  <widgetType name="nx-checkbox">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <aliases>
+      <alias>nx-int</alias>
+    </aliases>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-checkbox.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-datetime">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-datetime.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-directory">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <aliases>
+      <alias>nx-suggest-one-directory</alias>>
+      <alias>nx-suggest-many-directory</alias>
+    </aliases>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-directory.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-file">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-file.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-integer">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <aliases>
+      <alias>nx-int</alias>
+    </aliases>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-integer.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-richtext">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <aliases>
+      <alias>nx-htmltest</alias>
+    </aliases>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-richtext.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-text">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-text.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-textarea">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-textarea.html
+    </property>
+  </widgetType>
+
+</extension>
+</component>
