@@ -33,7 +33,7 @@ import org.nuxeo.ecm.platform.rendering.api.RenderingException;
 import org.nuxeo.ecm.platform.rendering.api.ResourceLocator;
 import org.nuxeo.ecm.platform.rendering.api.View;
 import org.nuxeo.ecm.platform.rendering.fm.FreemarkerEngine;
-
+import org.nuxeo.ecm.platform.webcomponents.layout.service.WebComponentLayoutManager;
 import org.nuxeo.runtime.api.Framework;
 
 import javax.servlet.ServletException;
@@ -74,7 +74,7 @@ public class WebComponentsServlet extends HttpServlet {
 
     // but apply our layout/widget converters
     // and use our own widget types
-    private static final String WEBCOMPONENTS_CATEGORY = "webcomponents";
+    private static final String WEBCOMPONENTS_CATEGORY = WebComponentLayoutManager.CATEGORY;
 
     private static final String DEFAULT_LANGUAGE = "en";
 
