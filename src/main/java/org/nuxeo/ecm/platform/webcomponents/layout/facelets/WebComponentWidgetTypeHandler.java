@@ -17,25 +17,13 @@
 
 package org.nuxeo.ecm.platform.webcomponents.layout.facelets;
 
-import org.nuxeo.ecm.platform.forms.layout.api.Widget;
-import org.nuxeo.ecm.platform.forms.layout.api.exceptions.WidgetException;
-import org.nuxeo.ecm.platform.forms.layout.facelets.LeafFaceletHandler;
-import org.nuxeo.ecm.platform.forms.layout.facelets.plugins.AbstractWidgetTypeHandler;
-
-import javax.faces.view.facelets.FaceletContext;
-import javax.faces.view.facelets.FaceletHandler;
-import javax.faces.view.facelets.TagConfig;
+import org.nuxeo.ecm.platform.forms.layout.api.service.LayoutStore;
 
 /**
- * Dummy Widget type handler.
+ * Dummy Widget type handler, class is required for registration to the {@link LayoutStore} service.
  *
  * @since 7.3
  */
-public class WebComponentWidgetTypeHandler extends AbstractWidgetTypeHandler {
+public class WebComponentWidgetTypeHandler {
 
-    @Override
-    public FaceletHandler getFaceletHandler(FaceletContext ctx, TagConfig tagConfig, Widget widget,
-        FaceletHandler[] subHandlers) throws WidgetException {
-        return new LeafFaceletHandler();
-    }
 }
