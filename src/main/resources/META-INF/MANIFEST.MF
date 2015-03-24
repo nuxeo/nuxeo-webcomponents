@@ -6,4 +6,5 @@ Bundle-Vendor: Nuxeo
 Bundle-Version: 1.0.0
 Require-Bundle: org.nuxeo.ecm.platform.forms.layout.api
 Nuxeo-Component: OSGI-INF/widgettypes-contrib.xml,
- OSGI-INF/layout-converters-contrib.xml
+ OSGI-INF/layout-converters-contrib.xml,
+ OSGI-INF/layouts-framework.xml

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<component
+  name="org.nuxeo.ecm.platform.webcomponent.layout.WebComponentLayoutManager">
+
+  <require>org.nuxeo.ecm.platform.forms.layout.LayoutStore</require>
+
+  <implementation
+    class="org.nuxeo.ecm.platform.webcomponents.layout.service.WebComponentLayoutManagerImpl" />
+
+  <service>
+    <provide
+      interface="org.nuxeo.ecm.platform.webcomponents.layout.service.WebComponentLayoutManager" />
+  </service>
+
+</component>
