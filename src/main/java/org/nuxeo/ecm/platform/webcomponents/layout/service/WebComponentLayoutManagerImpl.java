@@ -41,6 +41,9 @@ import org.nuxeo.ecm.platform.forms.layout.api.WidgetDefinition;
 import org.nuxeo.ecm.platform.forms.layout.api.WidgetReference;
 import org.nuxeo.ecm.platform.forms.layout.api.WidgetTypeConfiguration;
 import org.nuxeo.ecm.platform.forms.layout.api.WidgetTypeDefinition;
+import org.nuxeo.ecm.platform.forms.layout.api.converters.LayoutConversionContext;
+import org.nuxeo.ecm.platform.forms.layout.api.converters.LayoutDefinitionConverter;
+import org.nuxeo.ecm.platform.forms.layout.api.converters.WidgetDefinitionConverter;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutImpl;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutRowComparator;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutRowImpl;
@@ -65,30 +68,33 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
     }
 
     @Override
-    public Layout getLayout(String layoutName, String mode) {
-        return getLayout(layoutName, getDefaultStoreCategory(), mode, null, false);
-    }
-
-    @Override
-    public Layout getLayout(String layoutName, String layoutCategory, String mode, List<String> selectedRows,
-            boolean selectAllRowsByDefault) {
-        LayoutDefinition layoutDef = getLayoutStore().getLayoutDefinition(layoutCategory, layoutName);
-        if (layoutDef == null) {
+    public Layout getLayout(WebComponentContext ctx, String layoutName, String layoutCategory, String mode,
+            List<String> selectedRows, boolean selectAllRowsByDefault) {
+        LayoutDefinition lDef = getLayoutStore().getLayoutDefinition(layoutCategory, layoutName);
+        if (lDef == null) {
             log.debug(String.format("Layout '%s' not found for category '%s'", layoutName, layoutCategory));
             return null;
         }
-        return getLayout(layoutDef, mode, null, false);
+        return getLayout(ctx, lDef, layoutCategory, mode, null, false);
     }
 
     @Override
-    public Layout getLayout(LayoutDefinition layoutDef, String mode, List<String> selectedRows,
-            boolean selectAllRowsByDefault) {
-        if (layoutDef == null) {
+    public Layout getLayout(WebComponentContext ctx, LayoutDefinition lDef, String layoutCategory, String mode,
+            List<String> selectedRows, boolean selectAllRowsByDefault) {
+        if (lDef == null) {
             log.debug("Layout definition is null");
             return null;
         }
-        String layoutName = layoutDef.getName();
-        LayoutRowDefinition[] rowsDef = layoutDef.getRows();
+        LayoutDefinition clDef = lDef.clone();
+        if (ctx != null) {
+            LayoutConversionContext lctx = ctx.getConversionContext();
+            List<LayoutDefinitionConverter> lcs = getLayoutStore().getLayoutConverters(ctx.getConversionCategory());
+            for (LayoutDefinitionConverter lc : lcs) {
+                clDef = lc.getLayoutDefinition(clDef, lctx);
+            }
+        }
+        String layoutName = clDef.getName();
+        LayoutRowDefinition[] rowsDef = clDef.getRows();
         List<LayoutRow> rows = new ArrayList<LayoutRow>();
         Set<String> foundRowNames = new HashSet<String>();
         int rowIndex = -1;
@@ -119,13 +125,17 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
                     widgets.add(null);
                     continue;
                 }
-                WidgetDefinition wDef = lookupWidget(layoutDef, widgetRef);
+                String cat = widgetRef.getCategory();
+                if (StringUtils.isBlank(cat)) {
+                    cat = layoutCategory;
+                }
+                WidgetDefinition wDef = lookupWidget(clDef, new WidgetReferenceImpl(cat, widgetName));
                 if (wDef == null) {
                     log.error(String.format("Widget '%s' not found in layout %s", widgetName, layoutName));
                     widgets.add(null);
                     continue;
                 }
-                Widget widget = getWidget(layoutName, layoutDef, wDef, mode, 0);
+                Widget widget = getWidget(ctx, layoutName, clDef, wDef, cat, mode, 0);
                 if (widget != null) {
                     emptyRow = false;
                 }
@@ -147,10 +157,10 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
             }
         }
 
-        String layoutTypeCategory = layoutDef.getTypeCategory();
+        String layoutTypeCategory = clDef.getTypeCategory();
         String actualLayoutTypeCategory = getStoreCategory(layoutTypeCategory);
         LayoutTypeDefinition layoutTypeDef = null;
-        String layoutType = layoutDef.getType();
+        String layoutType = clDef.getType();
         if (!StringUtils.isBlank(layoutType)) {
             // retrieve type for templates and props mapping
             layoutTypeDef = getLayoutStore().getLayoutTypeDefinition(actualLayoutTypeCategory, layoutType);
@@ -159,7 +169,7 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
             }
         }
 
-        String template = layoutDef.getTemplate(mode);
+        String template = clDef.getTemplate(mode);
         Map<String, Serializable> props = new HashMap<>();
         if (layoutTypeDef != null) {
             if (StringUtils.isEmpty(template)) {
@@ -173,21 +183,21 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
                 }
             }
         }
-        Map<String, Serializable> lprops = layoutDef.getProperties(mode);
+        Map<String, Serializable> lprops = clDef.getProperties(mode);
         if (lprops != null) {
             props.putAll(lprops);
         }
-        LayoutImpl layout = new LayoutImpl(layoutDef.getName(), mode, template, rows, layoutDef.getColumns(), props,
-                LayoutFunctions.computeLayoutDefinitionId(layoutDef));
+        LayoutImpl layout = new LayoutImpl(clDef.getName(), mode, template, rows, clDef.getColumns(), props,
+                LayoutFunctions.computeLayoutDefinitionId(clDef));
         layout.setType(layoutType);
         // XXX no value name handling
         layout.setValueName(null);
         layout.setTypeCategory(actualLayoutTypeCategory);
         if (Framework.isDevModeSet()) {
-            layout.setDefinition(layoutDef);
+            layout.setDefinition(clDef);
             // resolve template in "dev" mode, avoiding default lookup on "any"
             // mode
-            Map<String, String> templates = layoutDef.getTemplates();
+            Map<String, String> templates = clDef.getTemplates();
             String devTemplate = templates != null ? templates.get(BuiltinModes.DEV) : null;
             if (layoutTypeDef != null && StringUtils.isEmpty(devTemplate)) {
                 Map<String, String> typeTemplates = layoutTypeDef.getTemplates();
@@ -199,19 +209,21 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
     }
 
     @Override
-    public Widget getWidget(String widgetName, String widgetCategory, String layoutMode, String layoutName) {
+    public Widget getWidget(WebComponentContext ctx, String widgetName, String widgetCategory, String layoutMode,
+            String layoutName) {
         WidgetReference widgetRef = new WidgetReferenceImpl(widgetCategory, widgetName);
         WidgetDefinition wDef = lookupWidget(widgetRef);
         if (wDef != null) {
-            return getWidget(layoutName, null, wDef, layoutMode, 0);
+            return getWidget(ctx, layoutName, null, wDef, widgetCategory, layoutMode, 0);
         }
         return null;
     }
 
     @Override
-    public Widget getWidget(WidgetDefinition wDef, String layoutMode, String layoutName) {
+    public Widget getWidget(WebComponentContext ctx, WidgetDefinition wDef, String widgetCategory, String layoutMode,
+            String layoutName) {
         if (wDef != null) {
-            return getWidget(layoutName, null, wDef, layoutMode, 0);
+            return getWidget(ctx, layoutName, null, wDef, widgetCategory, layoutMode, 0);
         }
         return null;
     }
@@ -224,32 +236,43 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
      * Sub widgets are also computed recursively.
      */
     @SuppressWarnings("deprecation")
-    protected Widget getWidget(String layoutName, LayoutDefinition layoutDef, WidgetDefinition wDef, String layoutMode,
-            int level) {
-        String wMode = getModeFromLayoutMode(wDef, layoutMode);
+    protected Widget getWidget(WebComponentContext ctx, String layoutName, LayoutDefinition lDef,
+            WidgetDefinition wDef, String widgetCategory, String layoutMode, int level) {
+        WidgetDefinition cwDef = wDef.clone();
+        if (ctx != null) {
+            LayoutConversionContext lctx = ctx.getConversionContext();
+            List<WidgetDefinitionConverter> lcs = getLayoutStore().getWidgetConverters(ctx.getConversionCategory());
+            for (WidgetDefinitionConverter wc : lcs) {
+                cwDef = wc.getWidgetDefinition(cwDef, lctx);
+            }
+        }
+        String wMode = getModeFromLayoutMode(cwDef, layoutMode);
         if (BuiltinWidgetModes.HIDDEN.equals(wMode)) {
             return null;
         }
         List<Widget> subWidgets = new ArrayList<Widget>();
-        WidgetDefinition[] swDefs = wDef.getSubWidgetDefinitions();
+        WidgetDefinition[] swDefs = cwDef.getSubWidgetDefinitions();
         if (swDefs != null) {
             for (WidgetDefinition swDef : swDefs) {
-                Widget subWidget = getWidget(layoutName, layoutDef, swDef, wMode, level + 1);
+                Widget subWidget = getWidget(ctx, layoutName, lDef, swDef, widgetCategory, wMode, level + 1);
                 if (subWidget != null) {
                     subWidgets.add(subWidget);
                 }
             }
         }
 
-        WidgetReference[] swRefs = wDef.getSubWidgetReferences();
+        WidgetReference[] swRefs = cwDef.getSubWidgetReferences();
         if (swRefs != null) {
             for (WidgetReference swRef : swRefs) {
-                WidgetDefinition swDef = lookupWidget(layoutDef, swRef);
+                String cat = swRef.getCategory();
+                if (StringUtils.isBlank(cat)) {
+                    cat = widgetCategory;
+                }
+                WidgetDefinition swDef = lookupWidget(lDef, new WidgetReferenceImpl(cat, swRef.getName()));
                 if (swDef == null) {
                     log.error(String.format("Widget '%s' not found in layout %s", swRef.getName(), layoutName));
                 } else {
-                    Widget subWidget = getWidget(layoutName, layoutDef, swDef, wMode, level + 1);
-
+                    Widget subWidget = getWidget(ctx, layoutName, lDef, swDef, cat, wMode, level + 1);
                     if (subWidget != null) {
                         subWidgets.add(subWidget);
                     }
@@ -258,10 +281,10 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
         }
 
         // XXX no variable resolution for now
-        boolean required = Boolean.valueOf(wDef.getRequired(layoutMode, wMode));
+        boolean required = Boolean.valueOf(cwDef.getRequired(layoutMode, wMode));
 
-        String wType = wDef.getType();
-        String wTypeCat = wDef.getTypeCategory();
+        String wType = cwDef.getType();
+        String wTypeCat = cwDef.getTypeCategory();
         // fill default property and control values from the widget definition
         Map<String, Serializable> props = new HashMap<String, Serializable>();
         Map<String, Serializable> controls = new HashMap<String, Serializable>();
@@ -280,17 +303,18 @@ public class WebComponentLayoutManagerImpl extends AbstractLayoutManager impleme
             }
         }
 
-        props.putAll(wDef.getProperties(layoutMode, wMode));
-        controls.putAll(wDef.getControls(layoutMode, wMode));
+        props.putAll(cwDef.getProperties(layoutMode, wMode));
+        controls.putAll(cwDef.getControls(layoutMode, wMode));
 
-        WidgetImpl widget = new WidgetImpl(layoutName, wDef.getName(), wMode, wType, null, wDef.getFieldDefinitions(),
-                wDef.getLabel(layoutMode), wDef.getHelpLabel(layoutMode), wDef.isTranslated(), wDef.isHandlingLabels(),
-                props, required, subWidgets.toArray(new Widget[0]), level, wDef.getSelectOptions(),
-                LayoutFunctions.computeWidgetDefinitionId(wDef), wDef.getRenderingInfos(layoutMode));
+        WidgetImpl widget = new WidgetImpl(layoutName, cwDef.getName(), wMode, wType, null,
+                cwDef.getFieldDefinitions(), cwDef.getLabel(layoutMode), cwDef.getHelpLabel(layoutMode),
+                cwDef.isTranslated(), cwDef.isHandlingLabels(), props, required, subWidgets.toArray(new Widget[0]),
+                level, cwDef.getSelectOptions(), LayoutFunctions.computeWidgetDefinitionId(cwDef),
+                cwDef.getRenderingInfos(layoutMode));
         widget.setControls(controls);
         widget.setTypeCategory(actualWTypeCat);
         if (Framework.isDevModeSet()) {
-            widget.setDefinition(wDef);
+            widget.setDefinition(cwDef);
         }
         return widget;
     }

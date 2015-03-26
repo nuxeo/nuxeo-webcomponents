@@ -35,15 +35,16 @@ public interface WebComponentLayoutManager {
 
     public static final String CATEGORY = "webcomponents";
 
-    Layout getLayout(String layoutName, String mode);
+    Layout getLayout(WebComponentContext ctx, String layoutName, String layoutCategory, String mode,
+            List<String> selectedRows, boolean selectAllRowsByDefault);
 
-    Layout getLayout(String layoutName, String layoutCategory, String mode, List<String> selectedRows,
-            boolean selectAllRowsByDefault);
+    Layout getLayout(WebComponentContext ctx, LayoutDefinition layoutDef, String layoutCategory, String mode,
+            List<String> selectedRows, boolean selectAllRowsByDefault);
 
-    Layout getLayout(LayoutDefinition layoutDef, String mode, List<String> selectedRows, boolean selectAllRowsByDefault);
+    Widget getWidget(WebComponentContext ctx, String widgetName, String widgetCategory, String layoutMode,
+            String layoutName);
 
-    Widget getWidget(String widgetName, String widgetCategory, String layoutMode, String layoutName);
-
-    Widget getWidget(WidgetDefinition widgetDef, String layoutMode, String layoutName);
+    Widget getWidget(WebComponentContext ctx, WidgetDefinition widgetDef, String widgetCategory,
+            String layoutMode, String layoutName);
 
 }

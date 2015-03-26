@@ -14,10 +14,30 @@
       </converter-class>
     </widgetConverter>
 
+    <widgetConverter name="webcListingFieldConverter" order="20">
+      <categories>
+        <category>webcomponents</category>
+        <category>webcomponents_instances</category>
+      </categories>
+      <converter-class>
+        org.nuxeo.ecm.platform.webcomponents.layout.converters.JSFListingWidgetConverter
+      </converter-class>
+    </widgetConverter>
+
+    <widgetConverter name="webcDirectoryConverter" order="20">
+      <categories>
+        <category>webcomponents</category>
+        <category>webcomponents_instances</category>
+      </categories>
+      <converter-class>
+        org.nuxeo.ecm.platform.forms.layout.io.plugins.WidgetDirectoryItemsConverter
+      </converter-class>
+    </widgetConverter>
+
   </extension>
 
   <extension target="org.nuxeo.ecm.platform.forms.layout.LayoutStore"
-             point="layoutConverters">
+    point="layoutConverters">
 
     <layoutConverter name="jsfToWebComponents" order="10">
       <categories>
