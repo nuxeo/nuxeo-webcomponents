@@ -5,12 +5,12 @@
   <extension target="org.nuxeo.ecm.platform.forms.layout.LayoutStore"
     point="widgetConverters">
 
-    <widgetConverter name="nameToTag" order="10">
+    <widgetConverter name="jsfToWebComponents" order="10">
       <categories>
         <category>webcomponents</category>
       </categories>
       <converter-class>
-        org.nuxeo.ecm.platform.webcomponents.layout.converters.WidgetToTagConverter
+        org.nuxeo.ecm.platform.webcomponents.layout.converters.JSFToWebComponentsConverter
       </converter-class>
     </widgetConverter>
 
@@ -19,12 +19,12 @@
   <extension target="org.nuxeo.ecm.platform.forms.layout.LayoutStore"
              point="layoutConverters">
 
-    <layoutConverter name="nameToTag" order="10">
+    <layoutConverter name="jsfToWebComponents" order="10">
       <categories>
         <category>webcomponents</category>
       </categories>
       <converter-class>
-        org.nuxeo.ecm.platform.webcomponents.layout.converters.LayoutToTagConverter
+        org.nuxeo.ecm.platform.webcomponents.layout.converters.JSFToWebComponentsConverter
       </converter-class>
     </layoutConverter>
 

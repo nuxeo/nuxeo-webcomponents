@@ -8,9 +8,6 @@
     <categories>
       <category>webcomponents</category>
     </categories>
-    <aliases>
-      <alias>nx-int</alias>
-    </aliases>
     <handler-class>
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>

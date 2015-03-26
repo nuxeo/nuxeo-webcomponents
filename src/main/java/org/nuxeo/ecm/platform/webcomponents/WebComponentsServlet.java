@@ -48,15 +48,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Servlet to produce web components from layouts and widgets.
@@ -91,9 +87,13 @@ public class WebComponentsServlet extends HttpServlet {
 
     private LayoutStore layoutStore;
 
-    private Map<String, LayoutDefinition> layoutDefinitions;
 
-    private Map<String, WidgetTypeDefinition> widgetTypeDefinitions;
+    @Override
+    public void init() throws ServletException {
+        // TODO: conversions should be handled by listeners
+        convertJSFWidgetDefinitions();
+        convertJSFLayoutDefinitions();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -171,7 +171,7 @@ public class WebComponentsServlet extends HttpServlet {
     }
 
     protected View getWidgetView(String tag) {
-        WidgetTypeDefinition def = getWidgetTypeDefinitions().get(tag);
+        WidgetDefinition def = getWidgetDefinition(tag);
         if (def == null) {
             return null;
         }
@@ -179,49 +179,40 @@ public class WebComponentsServlet extends HttpServlet {
     }
 
     protected View getLayoutView(String tag) {
-        LayoutDefinition def = getLayoutDefinitions().get(tag);
+        LayoutDefinition def = getLayoutDefinition(tag);
         if (def == null) {
             return null;
         }
-        Set<String> widgetTypes = new HashSet<>();
+        // get a list of widget ready for import
+        Set<WidgetDefinition> widgets = new HashSet<>();
         for (LayoutRowDefinition row : def.getRows()) {
             for (WidgetReference widgetRef : row.getWidgetReferences()) {
                 WidgetDefinition widgetDef = def.getWidgetDefinition(widgetRef.getName());
-                widgetTypes.add(widgetDef.getType());
+                widgets.add(widgetDef);
             }
         }
         return getTemplate("layout")
             .arg("tag", tag)
             .arg("layout", def)
-            .arg("widgetTypes", widgetTypes);
+            .arg("widgets", widgets); // widget definition names
     }
 
     private View getTemplate(String  name) {
         return engine.getView(TEMPLATE_PREFIX + name, this);
     }
 
-    private Map<String, WidgetTypeDefinition> getWidgetTypeDefinitions() {
-        if (widgetTypeDefinitions == null) {
-            widgetTypeDefinitions = getLayoutStore().getWidgetTypeDefinitions(WEBCOMPONENTS_CATEGORY).stream()
-                .collect(Collectors.toMap(WidgetTypeDefinition::getName, Function.identity()));
+    private void convertJSFWidgetDefinitions() {
+        for (String widgetName : getLayoutStore().getWidgetDefinitionNames(JSF_CATEGORY)) {
+            WidgetDefinition widgetDef = convertWidget(getLayoutStore().getWidgetDefinition(JSF_CATEGORY, widgetName));
+            getLayoutStore().registerWidget(WEBCOMPONENTS_CATEGORY, widgetDef);
         }
-        return widgetTypeDefinitions;
     }
 
-    private Map<String, LayoutDefinition> getLayoutDefinitions() {
-        if (layoutDefinitions == null) {
-            layoutDefinitions = new HashMap<>();
-            for (String layoutName : getLayoutStore().getLayoutDefinitionNames(JSF_CATEGORY)) {
-                LayoutDefinition layoutDef = convertLayout(getLayoutStore().getLayoutDefinition(JSF_CATEGORY, layoutName));
-                String tag = layoutDef.getName();
-                if (layoutDefinitions.containsKey(tag)) {
-                    log.warn("Duplicate layout tag " + tag);
-                    continue;
-                }
-                layoutDefinitions.put(tag, layoutDef);
-            }
+    private void convertJSFLayoutDefinitions() {
+        for (String layoutName : getLayoutStore().getLayoutDefinitionNames(JSF_CATEGORY)) {
+            LayoutDefinition layoutDef = convertLayout(getLayoutStore().getLayoutDefinition(JSF_CATEGORY, layoutName));
+            getLayoutStore().registerLayout(WEBCOMPONENTS_CATEGORY, layoutDef);
         }
-        return layoutDefinitions;
     }
 
     private LayoutStore getLayoutStore() {
@@ -253,12 +244,16 @@ public class WebComponentsServlet extends HttpServlet {
         return widgetDef;
     }
 
-    public WidgetDefinition getWidget(String name) {
-        return layoutStore.getWidgetDefinition(JSF_CATEGORY, name);
+    public WidgetDefinition getWidgetDefinition(String name) {
+        return getLayoutStore().getWidgetDefinition(WEBCOMPONENTS_CATEGORY, name);
     }
 
-    private WidgetTypeDefinition getWidgetTypeDefinition(String name) {
+    public WidgetTypeDefinition getWidgetTypeDefinition(String name) {
         return getLayoutStore().getWidgetTypeDefinition(WEBCOMPONENTS_CATEGORY, name);
+    }
+
+    public LayoutDefinition getLayoutDefinition(String name) {
+        return getLayoutStore().getLayoutDefinition(WEBCOMPONENTS_CATEGORY, name);
     }
 
     protected static InputStream getResource(String path) {
@@ -276,16 +271,16 @@ public class WebComponentsServlet extends HttpServlet {
 
         @Override
         public URL getResourceURL(String key) {
-            if (key.startsWith(TEMPLATE_PREFIX)) {
-                return getClass().getResource(
-                    String.format("%s/%s.ftl", TEMPLATE_PATH, key.substring(TEMPLATE_PREFIX.length())));
-            } else {
-                try {
+            try {
+                if (key.startsWith(TEMPLATE_PREFIX)) {
+                    String path = String.format("%s/%s.ftl", TEMPLATE_PATH, key.substring(TEMPLATE_PREFIX.length()));
+                    return getClass().getResource(path);
+                } else {
                     return new URL(key);
-                } catch (MalformedURLException e) {
-                    log.error("Malformed resource URL " + key);
-                    return null;
                 }
+            } catch (MalformedURLException e) {
+                log.error("Malformed resource URL " + key);
+                return null;
             }
 
         }
