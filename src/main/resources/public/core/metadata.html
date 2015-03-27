@@ -1,0 +1,52 @@
+<x-meta id="nx-connection" label="Connection" group="Nuxeo API">
+    <template>
+        <nx-connection></nx-connection>
+    </template>
+
+    <property name="url" kind="string"/>
+    <property name="username" kind="string"/>
+    <property name="password" kind="string"/>
+
+    <template id="imports">
+        <link rel="import" href="nx-connection.html">
+    </template>
+</x-meta>
+
+<x-meta id="nx-operation" label="Operation" group="Nuxeo API">
+    <template>
+        <nx-operation id="operation" auto op="Document.Query" params='{"query":"select * from Document"}' on-response="{{onOpResponse}}"></nx-operation>
+    </template>
+
+    <property name="auto" kind="boolean"></property>
+    <property name="op" kind="string"/>
+    <property name="params" kind="json"/>
+
+    <template id="imports">
+        <link rel="import" href="nx-operation.html">
+    </template>
+</x-meta>
+
+<x-meta id="nx-page-provider" label="Page Provider" group="Nuxeo API">
+    <template>
+        <nx-page-provider auto pageSize="5" query="select * from Document"></nx-page-provider>
+    </template>
+
+    <property name="auto" kind="boolean"></property>
+
+    <template id="imports">
+        <link rel="import" href="nx-page-provider.html">
+    </template>
+</x-meta>
+
+<x-meta id="nx-resource" label="Resource" group="Nuxeo API">
+    <template>
+        <nx-resource id="nx_resource"></nx-resource>
+    </template>
+
+    <property name="auto" kind="boolean"></property>
+    <property name="path" kind="string"></property>
+
+    <template id="imports">
+        <link rel="import" href="nx-resource.html">
+    </template>
+</x-meta>

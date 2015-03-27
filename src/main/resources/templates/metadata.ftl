@@ -15,25 +15,23 @@ Contributors:
   Nelson Silva <nsilva@nuxeo.com>
 -->
 
-<!--
-@group Nuxeo Widgets
-
-`${tag}`
-
-    <${tag} mode="view" value="{{doc}}"></${tag}>
-
-@element ${tag}
-
-@homepage http://www.nuxeo.org
--->
-
-<link rel="import" href="../polymer/polymer.html">
-
-<link rel="import" href="../widgets/${widget.type}.html">
-
-<polymer-element name="${tag}" attributes="mode value connectionId" noscript>
+<#list entries as meta>
+<x-meta id="${meta.id}" label="${meta.label}" group="${meta.group}">
     <template>
-        <#assign field = widget.fieldDefinitions[0].propertyName />
-        <${widget.type} mode="{{mode}}" value="{{value['${field}']}}" connectionId="{{connectionId}}"></${widget.type}>
+        <${meta.id}></${meta.id}>
     </template>
-</polymer-element>
+
+    <#list meta.properties?values as property>
+        <property name="${property.name}"
+                  kind="${property.kind}"
+        <#list property.attributes?keys as att>
+                  ${att}="${property.attributes[att]}"
+        </#list>
+                ></property>
+    </#list>
+
+    <template id="imports">
+        <link rel="import" href="${importPath}/${meta.id}.html">
+    </template>
+</x-meta>
+</#list>

@@ -5,6 +5,16 @@
            point="widgettypes">
 
   <widgetType name="nx-checkbox">
+    <configuration>
+      <title>Checkbox</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
     <categories>
       <category>webcomponents</category>
     </categories>
@@ -17,6 +27,16 @@
   </widgetType>
 
   <widgetType name="nx-datetime">
+    <configuration>
+      <title>Datetime</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
     <categories>
       <category>webcomponents</category>
     </categories>
@@ -29,6 +49,16 @@
   </widgetType>
 
   <widgetType name="nx-directory">
+    <configuration>
+      <title>Directory</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
     <categories>
       <category>webcomponents</category>
     </categories>
@@ -45,6 +75,16 @@
   </widgetType>
 
   <widgetType name="nx-file">
+    <configuration>
+      <title>File</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
     <categories>
       <category>webcomponents</category>
     </categories>
@@ -57,6 +97,16 @@
   </widgetType>
 
   <widgetType name="nx-integer">
+    <configuration>
+      <title>Integer</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
     <categories>
       <category>webcomponents</category>
     </categories>
@@ -87,6 +137,16 @@
   </widgetType>
 
   <widgetType name="nx-text">
+    <configuration>
+      <title>Text</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
     <categories>
       <category>webcomponents</category>
     </categories>
@@ -99,6 +159,16 @@
   </widgetType>
 
   <widgetType name="nx-textarea">
+    <configuration>
+      <title>Textarea</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
     <categories>
       <category>webcomponents</category>
     </categories>

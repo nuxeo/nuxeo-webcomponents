@@ -33,7 +33,8 @@ import org.nuxeo.ecm.platform.rendering.api.RenderingException;
 import org.nuxeo.ecm.platform.rendering.api.ResourceLocator;
 import org.nuxeo.ecm.platform.rendering.api.View;
 import org.nuxeo.ecm.platform.rendering.fm.FreemarkerEngine;
-import org.nuxeo.ecm.platform.webcomponents.layout.service.WebComponentLayoutManager;
+
+import org.nuxeo.ecm.platform.webcomponents.metadata.ElementMetadata;
 import org.nuxeo.runtime.api.Framework;
 
 import javax.servlet.ServletException;
@@ -48,11 +49,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Servlet to produce web components from layouts and widgets.
@@ -70,13 +73,16 @@ public class WebComponentsServlet extends HttpServlet {
 
     // but apply our layout/widget converters
     // and use our own widget types
-    private static final String WEBCOMPONENTS_CATEGORY = WebComponentLayoutManager.CATEGORY;
+    private static final String WEBCOMPONENTS_CATEGORY = "webcomponents";
 
     private static final String DEFAULT_LANGUAGE = "en";
 
     // router patterns
     private static final Pattern WIDGET_PATTERN = Pattern.compile("/widgets/(.*).html");
+    private static final String WIDGET_METADATA = "/widgets/metadata.html";
+
     private static final Pattern LAYOUT_PATTERN = Pattern.compile("/layouts/(.*).html");
+    private static final String LAYOUT_METADATA = "/layouts/metadata.html";
 
     // resource paths
     private static final String STATIC_PATH = "/public";
@@ -87,6 +93,10 @@ public class WebComponentsServlet extends HttpServlet {
 
     private LayoutStore layoutStore;
 
+    // Metadata for our custom elements
+    private List<ElementMetadata> widgetTypesMetadata = null;
+    private List<ElementMetadata> widgetsMetadata = null;
+    private List<ElementMetadata> layoutsMetadata = null;
 
     @Override
     public void init() throws ServletException {
@@ -113,10 +123,37 @@ public class WebComponentsServlet extends HttpServlet {
             return;
         }
 
+        View view;
+
+        if (WIDGET_METADATA.equals(path)) {
+            String uri = req.getRequestURI();
+            String baseURL = uri.substring(0, uri.length() - WIDGET_METADATA.length());
+            // widgets + widget types metadata
+            List<ElementMetadata> metadata = new ArrayList<>();
+            metadata.addAll(getWidgetTypesMetadata());
+            metadata.addAll(getWidgetsMetadata());
+            view = getTemplate("metadata")
+                .arg("entries", metadata)
+                .arg("importPath", baseURL + "/widgets");
+            send(view, resp);
+            return;
+        }
+
+        // layouts metadata
+        if (LAYOUT_METADATA.equals(path)) {
+            String uri = req.getRequestURI();
+            String baseURL = uri.substring(0, uri.length() - WIDGET_METADATA.length());
+            view = getTemplate("metadata")
+                .arg("entries", getLayoutsMetadata())
+                .arg("importPath", baseURL + "/layouts");
+            send(view, resp);
+            return;
+        }
+
         // check if it's a widget
         Matcher widgetMatcher = WIDGET_PATTERN.matcher(path);
         if (widgetMatcher.find()) {
-            View view = getWidgetView(widgetMatcher.group(1));
+            view = getWidgetView(widgetMatcher.group(1));
             if (view != null) {
                 send(view, resp);
                 return;
@@ -126,7 +163,7 @@ public class WebComponentsServlet extends HttpServlet {
         // or a layout
         Matcher layoutMatcher = LAYOUT_PATTERN.matcher(path);
         if (layoutMatcher.find()) {
-            View view = getLayoutView(layoutMatcher.group(1));
+            view = getLayoutView(layoutMatcher.group(1));
             if (view != null) {
                 send(view, resp);
                 return;
@@ -213,6 +250,51 @@ public class WebComponentsServlet extends HttpServlet {
             LayoutDefinition layoutDef = convertLayout(getLayoutStore().getLayoutDefinition(JSF_CATEGORY, layoutName));
             getLayoutStore().registerLayout(WEBCOMPONENTS_CATEGORY, layoutDef);
         }
+    }
+
+    private List<WidgetTypeDefinition> getWidgetTypes() {
+        return getLayoutStore().getWidgetTypeDefinitions(WEBCOMPONENTS_CATEGORY);
+    }
+
+    private List<ElementMetadata> getWidgetTypesMetadata() {
+        if (widgetTypesMetadata == null) {
+            widgetTypesMetadata = getWidgetTypes().stream()
+                .map(ElementMetadata::from)
+                .collect(Collectors.toList());
+        }
+        return widgetTypesMetadata;
+    }
+
+    private List <WidgetDefinition> getWidgets() {
+        return getLayoutStore().getWidgetDefinitionNames(WEBCOMPONENTS_CATEGORY).stream()
+            .map((widgetName) -> getLayoutStore().getWidgetDefinition(WEBCOMPONENTS_CATEGORY, widgetName))
+            .collect(Collectors.toList());
+    }
+
+    private List<ElementMetadata> getWidgetsMetadata() {
+        if (widgetsMetadata == null) {
+            widgetsMetadata = getWidgets().stream()
+                .map(ElementMetadata::from)
+                .filter((meta) -> meta != null) // widgets without a matching "webcomponents" widget type return null
+                .collect(Collectors.toList());
+        }
+        return widgetsMetadata;
+    }
+
+    private List<LayoutDefinition> getLayouts() {
+        return getLayoutStore().getLayoutDefinitionNames(WEBCOMPONENTS_CATEGORY).stream()
+            .map((layoutName) -> getLayoutStore().getLayoutDefinition(WEBCOMPONENTS_CATEGORY, layoutName))
+            .collect(Collectors.toList());
+    }
+
+    private List<ElementMetadata> getLayoutsMetadata() {
+        if (layoutsMetadata == null) {
+            layoutsMetadata = getLayouts().stream()
+                .filter((def) -> def != null)
+                .map(ElementMetadata::from)
+                .collect(Collectors.toList());
+        }
+        return layoutsMetadata;
     }
 
     private LayoutStore getLayoutStore() {

@@ -12,13 +12,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 Lesser General Public License for more details.
 
 Contributors:
-  Nelson Silva <nelson.silva@inevo.pt>
+  Nelson Silva <nsilva@nuxeo.com>
 -->
 
 <!--
 @group Nuxeo Layouts
 
-`nx-datetime`
+`${tag}`
 
     <${tag} mode="view" value="{{doc}}"></${tag}>
 
