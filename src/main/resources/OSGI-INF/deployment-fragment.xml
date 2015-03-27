@@ -7,7 +7,7 @@
     </servlet>
     <servlet-mapping>
       <servlet-name>Web Components Servlet</servlet-name>
-      <url-pattern>/components/*</url-pattern>
+      <url-pattern>/elements/*</url-pattern>
     </servlet-mapping>
   </extension>
 </fragment>
