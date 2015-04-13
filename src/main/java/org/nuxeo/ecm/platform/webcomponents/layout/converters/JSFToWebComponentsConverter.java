@@ -49,7 +49,7 @@ public class JSFToWebComponentsConverter implements LayoutDefinitionConverter, W
     public LayoutDefinition getLayoutDefinition(LayoutDefinition orig, LayoutConversionContext ctx) {
         LayoutDefinition layout = getClonedLayout(orig);
 
-        layout.setName(getTag(layout.getName()));
+        layout.setName(getLayoutTag(layout.getName()));
 
         for (LayoutRowDefinition row : layout.getRows()) {
             for (WidgetReference widgetRef : row.getWidgetReferences()) {
@@ -81,7 +81,19 @@ public class JSFToWebComponentsConverter implements LayoutDefinitionConverter, W
         return clone;
     }
 
-    public static String getTag(String name) {
+    private static String getLayoutTag(String name) {
+        return TAG_PREFIX + "-" +  getTag(name);
+    }
+
+    private static String getWidgetTag(String name) {
+        return TAG_PREFIX + "-widget-" +  getTag(name);
+    }
+
+    private static String getWidgetTypeTag(String name) {
+        return TAG_PREFIX + "-widget-type-" +  getTag(name);
+    }
+
+    private static String getTag(String name) {
         // handle studio generated ids differently to make them look nicer
         if (name.contains("@")) {
             String[] parts = name.split("@");
@@ -93,12 +105,12 @@ public class JSFToWebComponentsConverter implements LayoutDefinitionConverter, W
         name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, name);
         // remove any '--' that the previous step might have added
         name = name.replaceAll("--", "-");
-        return TAG_PREFIX + "-" + name;
+        return name;
     }
 
     private void convertWidgetDefinition(WidgetDefinition widget) {
-        widget.setName(getTag(widget.getName()));
-        widget.setType(getTag(widget.getType()));
+        widget.setName(getWidgetTag(widget.getName()));
+        widget.setType(getWidgetTypeTag(widget.getType()));
 
         for (WidgetReference subWidget : widget.getSubWidgetReferences()) {
             // TODO

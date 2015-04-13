@@ -15,29 +15,24 @@ Lesser General Public License for more details.
 <!--
 @group Nuxeo Widgets
 
-`nx-integer`
+`nx-widget-author`
 
-    <nx-integer name="my_widget" mode="view" label="My Widget">
-    </nx-integer>
+    <nx-widget-author name="my_widget" mode="view" label="My Widget">
+    </nx-author>
 
-@element nx-integer
+@element nx-widget-author
 @extends nx-widget
 @homepage http://www.nuxeo.org
 -->
 <link rel="import" href="nx-widget.html">
-<polymer-element name="nx-integer" extends="nx-widget" widget="int" horizontal layout noscript>
-<template>
+<polymer-element name="nx-widget-author" extends="nx-widget" widget="author" horizontal layout noscript>
+  <template>
 
-  <template if="{{label}}"><strong>{{label}} : </strong></template>
+    <template if="{{label}}"><strong>{{label}} : </strong></template>
 
-  <template if="{{mode == 'view'}}">
-    {{value}}
+    <template if="{{mode == 'view' || mode == 'edit'}}">
+      {{value.properties["dc:creator"]}}
+    </template>
+
   </template>
-
-  <template if="{{mode == 'edit'}}">
-    <input
-      value="{{value}}"
-      type="number">
-  </template>
-</template>
 </polymer-element>

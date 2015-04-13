@@ -15,17 +15,18 @@ Lesser General Public License for more details.
 <!--
 @group Nuxeo Widgets
 
-`nx-directory`
+`nx-widget-type-directory`
 
-    <nx-directory name="my_widget" mode="view" label="My Widget">
-    </nx-directory>
+    <nx-widget-type-directory name="my_widget" mode="view" label="My Widget">
+    </nx-widget-type-directory>
 
 @element nx-directory
 @extends nx-widget
 @homepage http://www.nuxeo.org
 -->
 <link rel="import" href="nx-widget.html">
-<polymer-element name="nx-directory" extends="nx-widget" attributes="directoryName dbl10n multiple" horizontal layout>
+<link rel="import" href="../core/nx-operation.html">
+<polymer-element name="nx-widget-type-directory" extends="nx-widget" attributes="directoryName dbl10n multiple" horizontal layout>
 <template>
   <style>
   input {

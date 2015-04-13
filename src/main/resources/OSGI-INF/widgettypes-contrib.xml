@@ -4,7 +4,7 @@
 <extension target="org.nuxeo.ecm.platform.forms.layout.LayoutStore"
            point="widgettypes">
 
-  <widgetType name="nx-checkbox">
+  <widgetType name="nx-widget-type-checkbox">
     <configuration>
       <title>Checkbox</title>
       <categories>
@@ -22,11 +22,11 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-checkbox.html
+      /widgets/nx-widget-type-checkbox.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-datetime">
+  <widgetType name="nx-widget-type-datetime">
     <configuration>
       <title>Datetime</title>
       <categories>
@@ -44,11 +44,11 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-datetime.html
+      /widgets/nx-widget-type-datetime.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-directory">
+  <widgetType name="nx-widget-type-directory">
     <configuration>
       <title>Directory</title>
       <categories>
@@ -70,13 +70,13 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-directory.html
+      /widgets/nx-widget-type-directory.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-suggest-one-directory">
+  <widgetType name="nx-widget-type-suggest-one-directory">
     <configuration>
-      <title>Directory</title>
+      <title>Suggest One Directory</title>
       <categories>
         <category>document</category>
       </categories>
@@ -92,13 +92,13 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-suggest-one-directory.html
+      /widgets/nx-widget-type-suggest-one-directory.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-suggest-many-directory">
+  <widgetType name="nx-widget-type-suggest-many-directory">
     <configuration>
-      <title>Directory</title>
+      <title>Suggest Many Directory</title>
       <categories>
         <category>document</category>
       </categories>
@@ -114,11 +114,11 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-suggest-many-directory.html
+      /widgets/nx-widget-type-suggest-many-directory.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-file">
+  <widgetType name="nx-widget-type-file">
     <configuration>
       <title>File</title>
       <categories>
@@ -136,11 +136,11 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-file.html
+      /widgets/nx-widget-type-file.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-integer">
+  <widgetType name="nx-widget-type-integer">
     <configuration>
       <title>Integer</title>
       <categories>
@@ -158,11 +158,11 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-integer.html
+      /widgets/nx-widget-type-integer.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-richtext">
+  <widgetType name="nx-widget-type-richtext">
     <categories>
       <category>webcomponents</category>
     </categories>
@@ -170,11 +170,23 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-richtext.html
+      /widgets/nx-widget-type-richtext.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-text">
+  <widgetType name="nx-widget-type-richtext-with-mimetype">
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-widget-type-richtext-with-mimetype.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-widget-type-text">
     <configuration>
       <title>Text</title>
       <categories>
@@ -192,11 +204,11 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-text.html
+      /widgets/nx-widget-type-text.html
     </property>
   </widgetType>
 
-  <widgetType name="nx-textarea">
+  <widgetType name="nx-widget-type-textarea">
     <configuration>
       <title>Textarea</title>
       <categories>
@@ -214,7 +226,7 @@
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
     <property name="template">
-      /widgets/nx-textarea.html
+      /widgets/nx-widget-type-textarea.html
     </property>
   </widgetType>
 

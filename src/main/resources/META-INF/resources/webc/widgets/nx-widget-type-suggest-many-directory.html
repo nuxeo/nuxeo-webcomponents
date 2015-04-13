@@ -10,27 +10,24 @@ This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 Lesser General Public License for more details.
-
-Contributors:
-  Nelson Silva <nelson.silva@inevo.pt>
 -->
 
 <!--
 @group Nuxeo Widgets
 
-`nx-suggest-one-directory`
+`nx-widget-type-suggest-many-directory`
 
-    <nx-suggest-one-directory name="my_widget" mode="view" label="My Widget">
-    </nx-suggest-one-directory>
+    <nx-widget-type-suggest-many-directory name="my_widget" mode="view" label="My Widget">
+    </nx-widget-type-suggest-many-directory>
 
-@element nx-suggest-one-directory
+@element nx-suggest-many-directory
 @extends nx-widget
 @homepage http://www.nuxeo.org
 -->
 <link rel="import" href="nx-widget.html">
-<link rel="import" href="nx-directory.html">
-<polymer-element name="nx-suggest-one-directory" extends="nx-widget" attributes="directoryName dbl10n multiple" horizontal layout noscript>
+<link rel="import" href="nx-widget-type-directory.html">
+<polymer-element name="nx-widget-type-suggest-many-directory" extends="nx-widget" attributes="directoryName dbl10n multiple" horizontal layout noscript>
 <template>
-  <nx-directory multiple="false" directoryName="{{directoryName}}" dbl10n="{{dbl10n}}"></nx-directory>
+  <nx-widget-type-directory multiple="true" directoryName="{{directoryName}}" dbl10n="{{dbl10n}}"></nx-widget-type-directory>
 </template>
 </polymer-element>

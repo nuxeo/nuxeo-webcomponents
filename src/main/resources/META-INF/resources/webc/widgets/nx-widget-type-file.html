@@ -15,50 +15,37 @@ Lesser General Public License for more details.
 <!--
 @group Nuxeo Widgets
 
-`nx-richtext`
+`nx-widget-type-file`
 
-    <nx-richtext name="my_widget" mode="view" label="My Widget">
-    </nx-richtext>
+    <nx-widget-type-file name="my_widget" mode="view" label="My Widget">
+    </nx-file>
 
-@element nx-richtext
+@element nx-widget-type-file
 @extends nx-widget
 @homepage http://www.nuxeo.org
 -->
 <link rel="import" href="nx-widget.html">
-<polymer-element name="nx-richtext" extends="nx-widget" widget="richtext_with_mimetype">
+<polymer-element name="nx-widget-type-file" extends="nx-widget" widget="file" horizontal layout noscript>
 <template>
   <style>
-  div[contenteditable] {
-    border: 1px dotted #ccc;
-  }
-  #content {
-    overflow: overlay;
-    width:100%;
-    height:300px;
+  core-input {
+    border-bottom: 1px dotted #ccc;
   }
   </style>
 
   <template if="{{label}}"><strong>{{label}} : </strong></template>
 
-  <div id="content" contenteditable?="{{mode == 'edit'}}" on-input="{{updateValue}}"/>
+  <!-- TODO(nfgs): Move these templates to separate files -->
 
+  <!-- text || textarea -->
+  <template if="{{mode == 'view'}}">
+    {{value}}
+  </template>
+  <template if="{{mode == 'edit'}}">
+    <core-input
+      multiline?="{{type == 'textarea'}}"
+      inputValue="{{value}}"
+      rows="5"></core-input>
+  </template>
 </template>
-<script>
-  Polymer({
-    // TODO: Handle valueChanged
-    ready: function() {
-      if (this.value) {
-        this.$.content.innerHTML = this.value;
-      }
-    },
-    updateValue: function() {
-      this.value = this.$.content.innerHTML;
-    },
-    valueChanged: function() {
-      if (this.mode !== 'edit') {
-        this.$.content.innerHTML = this.value;
-      }
-    }
-  });
-</script>
 </polymer-element>

@@ -15,22 +15,22 @@ Lesser General Public License for more details.
 <!--
 @group Nuxeo Widgets
 
-`nx-text`
+`nx-widget-type-textarea`
 
-    <nx-text name="my_widget" mode="view" label="My Widget">
-    </nx-text>
+    <nx-widget-type-text name="my_widget" mode="view" label="My Widget">
+    </nx-widget-type-text>
 
-@element nx-text
+@element nx-widget-type-textarea
 @extends nx-widget
 @homepage http://www.nuxeo.org
 -->
 <link rel="import" href="nx-widget.html">
-<polymer-element name="nx-text" extends="nx-widget" widget="text" horizontal layout noscript>
+<polymer-element name="nx-widget-type-textarea" extends="nx-widget" widget="textarea" attributes="rows">
 <template>
   <style>
-    input[is=core-input] {
-      border-bottom: 1px dotted #ccc;
-    }
+  input[multiline] {
+    border: 1px dotted #ccc;
+  }
   </style>
 
   <template if="{{label}}"><strong>{{label}} : </strong></template>
@@ -40,9 +40,22 @@ Lesser General Public License for more details.
   </template>
 
   <template if="{{mode == 'edit'}}">
-    <input is="core-input"
-      value="{{value}}">
+    <textarea is="core-input"
+    value="{{value}}"
+    rows="{{rows}}"></textarea>
   </template>
 
 </template>
+<script>
+  Polymer({
+    /**
+     * Number of rows for the textarea.
+     *
+     * @attribute rows
+     * @type number
+     * @default 5
+     */
+    rows: 5
+  });
+</script>
 </polymer-element>
