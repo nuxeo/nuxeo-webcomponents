@@ -10,9 +10,6 @@ This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 Lesser General Public License for more details.
-
-Contributors:
-  Nelson Silva <nsilva@nuxeo.com>
 -->
 
 <!--
@@ -34,6 +31,6 @@ Contributors:
 <polymer-element name="${tag}" attributes="mode value connectionId" noscript>
     <template>
         <#assign field = widget.fieldDefinitions[0].propertyName />
-        <${widget.type} mode="{{mode}}" value="{{value['${field}']}}" connectionId="{{connectionId}}"></${widget.type}>
+        <${widget.type} mode="{{mode}}" value="{{value.properties['${field}']}}" connectionId="{{connectionId}}"></${widget.type}>
     </template>
 </polymer-element>

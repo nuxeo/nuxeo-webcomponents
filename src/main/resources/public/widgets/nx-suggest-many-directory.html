@@ -15,37 +15,19 @@ Lesser General Public License for more details.
 <!--
 @group Nuxeo Widgets
 
-`nx-file`
+`nx-suggest-many-directory`
 
-    <nx-file name="my_widget" mode="view" label="My Widget">
-    </nx-file>
+    <nx-suggest-many-directory name="my_widget" mode="view" label="My Widget">
+    </nx-suggest-many-directory>
 
-@element nx-file
+@element nx-suggest-many-directory
 @extends nx-widget
 @homepage http://www.nuxeo.org
 -->
 <link rel="import" href="nx-widget.html">
-<polymer-element name="nx-file" extends="nx-widget" widget="file" horizontal layout noscript>
+<link rel="import" href="nx-directory.html">
+<polymer-element name="nx-suggest-many-directory" extends="nx-widget" attributes="directoryName dbl10n multiple" horizontal layout noscript>
 <template>
-  <style>
-  core-input {
-    border-bottom: 1px dotted #ccc;
-  }
-  </style>
-
-  <template if="{{label}}"><strong>{{label}} : </strong></template>
-
-  <!-- TODO(nfgs): Move these templates to separate files -->
-
-  <!-- text || textarea -->
-  <template if="{{mode == 'view'}}">
-    {{value}}
-  </template>
-  <template if="{{mode == 'edit'}}">
-    <core-input
-      multiline?="{{type == 'textarea'}}"
-      inputValue="{{value}}"
-      rows="5"></core-input>
-  </template>
+  <nx-directory multiple="true" directoryName="{{directoryName}}" dbl10n="{{dbl10n}}"></nx-directory>
 </template>
 </polymer-element>

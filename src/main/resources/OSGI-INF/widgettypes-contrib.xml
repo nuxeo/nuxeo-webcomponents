@@ -74,6 +74,50 @@
     </property>
   </widgetType>
 
+  <widgetType name="nx-suggest-one-directory">
+    <configuration>
+      <title>Directory</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-suggest-one-directory.html
+    </property>
+  </widgetType>
+
+  <widgetType name="nx-suggest-many-directory">
+    <configuration>
+      <title>Directory</title>
+      <categories>
+        <category>document</category>
+      </categories>
+      <supportedModes>
+        <mode>edit</mode>
+        <mode>view</mode>
+      </supportedModes>
+    </configuration>
+    <categories>
+      <category>webcomponents</category>
+    </categories>
+    <handler-class>
+      org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
+    </handler-class>
+    <property name="template">
+      /widgets/nx-suggest-many-directory.html
+    </property>
+  </widgetType>
+
   <widgetType name="nx-file">
     <configuration>
       <title>File</title>
@@ -110,9 +154,6 @@
     <categories>
       <category>webcomponents</category>
     </categories>
-    <aliases>
-      <alias>nx-int</alias>
-    </aliases>
     <handler-class>
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
@@ -125,9 +166,6 @@
     <categories>
       <category>webcomponents</category>
     </categories>
-    <aliases>
-      <alias>nx-htmltest</alias>
-    </aliases>
     <handler-class>
       org.nuxeo.ecm.platform.webcomponents.layout.facelets.WebComponentWidgetTypeHandler
     </handler-class>
