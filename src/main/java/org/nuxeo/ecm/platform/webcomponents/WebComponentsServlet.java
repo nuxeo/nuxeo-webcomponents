@@ -56,6 +56,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Servlet to produce web components from layouts and widgets.
@@ -83,6 +85,8 @@ public class WebComponentsServlet extends HttpServlet {
 
     private static final Pattern LAYOUT_PATTERN = Pattern.compile("/layouts/(.*).html");
     private static final String LAYOUT_METADATA = "/layouts/metadata.html";
+
+    private static final String BOWER_PACKAGE = "/package.zip";
 
     // resource paths
     private static final String STATIC_PATH = "/public";
@@ -117,13 +121,16 @@ public class WebComponentsServlet extends HttpServlet {
         // be sure to remove any ..
         path = path.replaceAll("\\.\\.", "");
 
-        InputStream resource = getResource(STATIC_PATH + path);
-        if (resource != null) {
-            send(resource, resp);
+        if (sendStatic(path, resp)) {
             return;
         }
 
         View view;
+
+        if (BOWER_PACKAGE.equals(path)) {
+            sendPackage(resp);
+            return;
+        }
 
         if (WIDGET_METADATA.equals(path)) {
             String uri = req.getRequestURI();
@@ -153,7 +160,8 @@ public class WebComponentsServlet extends HttpServlet {
         // check if it's a widget
         Matcher widgetMatcher = WIDGET_PATTERN.matcher(path);
         if (widgetMatcher.find()) {
-            view = getWidgetView(widgetMatcher.group(1));
+            String tag = widgetMatcher.group(1);
+            view = getWidgetView(tag);
             if (view != null) {
                 send(view, resp);
                 return;
@@ -174,6 +182,36 @@ public class WebComponentsServlet extends HttpServlet {
         resp.sendError(404);
     }
 
+    protected void sendPackage(HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/zip");
+        resp.setHeader("Content-Disposition", "attachment;filename=package.zip");
+        ZipOutputStream zos = null;
+        try {
+            zos = new ZipOutputStream(resp.getOutputStream());
+            for (LayoutDefinition layout : getLayouts()) {
+                addZipEntry(zos, "layouts/" + layout.getName() + ".html", getLayoutView(layout.getName()));
+            }
+            for (WidgetDefinition widget : getWidgets()) {
+                addZipEntry(zos, "widgets/" + widget.getName() + ".html", getWidgetView(widget.getName()));
+            }
+        } catch (IOException | RenderingException e) {
+            log.error("Failed to produce bower package", e);
+            send(e, resp);
+        } finally {
+            if (zos != null) {
+                zos.close();
+            }
+        }
+    }
+
+    private void addZipEntry(ZipOutputStream zos, String name, View view) throws IOException, RenderingException {
+        ZipEntry entry = new ZipEntry(name);
+        zos.putNextEntry(entry);
+        view.render(zos);
+        zos.flush();
+        zos.closeEntry();
+    }
+
     protected void send(View view, HttpServletResponse resp) throws IOException {
         try {
             view.render(resp.getOutputStream());
@@ -181,6 +219,15 @@ public class WebComponentsServlet extends HttpServlet {
             log.error("Unable to render " + view.getName(), e);
             send(e, resp);
         }
+    }
+
+    protected boolean sendStatic(String path, HttpServletResponse resp) throws IOException {
+        InputStream is = getResource(STATIC_PATH + path);
+        if (is == null) {
+            return false;
+        }
+        send(is, resp);
+        return true;
     }
 
     protected void send(InputStream in, HttpServletResponse resp) throws IOException {
