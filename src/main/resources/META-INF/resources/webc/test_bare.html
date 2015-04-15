@@ -1,0 +1,35 @@
+<link rel="import" href="font-roboto/roboto.html">
+<link rel="import" href="polymer/polymer.html">
+<script>
+  HTMLImports.whenImportsReady = HTMLImports.whenReady;
+</script>
+
+<link rel="import" href="nuxeo-elements/nx-connection.html">
+<link rel="import" href="nuxeo-elements/nx-resource.html">
+<link rel="import" href="nuxeo-elements/layout-service/nx-layout-service.html">
+<link rel="import" href="nuxeo-elements/layouts/nx-form-layout.html">
+
+<polymer-element name="nx-test-bare" attributes="docpath">
+
+  <template is="auto-binding">
+
+    <nx-connection id="nx_connection"
+      url="http://localhost:8080/nuxeo"
+      username="Administrator"
+      password="Administrator">
+    </nx-connection>
+
+    <nx-resource auto id="doc" path="/path/{{docpath}}" data="{{doc}}"></nx-resource>
+
+    Doc: {{doc}}
+
+    Form layout example: dublincore on {{doc.properties['dc:title']}}
+    <nx-form-layout name="dublincore" mode="edit" valueH="{{doc}}">
+    </nx-form-layout>
+
+  </template>
+  <script>
+    Polymer({});
+  </script>
+
+</polymer-element>

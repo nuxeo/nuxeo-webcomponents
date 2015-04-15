@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<div xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:nxthemes="http://nuxeo.org/nxthemes"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:nxwebr="http://nuxeo.org/nxweb/resources">
+
+  <h:outputScript name="webc/webcomponentsjs/webcomponents.js" target="head" />
+
+  <nxwebr:import src="/components/test_bare.html" />
+  <nx-test-bare docpath="#{currentDocument.pathAsString}"></nx-test-bare>
+
+  <nxwebc:webcomponent name="nx-test-bare" docpath="#{currentDocument.pathAsString}" />
+
+</div>

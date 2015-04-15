@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <fragment version="1">
+
   <extension target="web#SERVLET">
     <servlet>
       <servlet-name>Web Components Servlet</servlet-name>
@@ -10,4 +11,11 @@
       <url-pattern>/elements/*</url-pattern>
     </servlet-mapping>
   </extension>
+
+  <install>
+    <unzip from="${bundle.fileName}" to="/" prefix="web">
+      <include>web/nuxeo.war/**</include>
+    </unzip>
+  </install>
+
 </fragment>

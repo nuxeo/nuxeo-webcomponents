@@ -1,0 +1,1 @@
+HTMLImports.whenImportsReady = HTMLImports.whenReady;

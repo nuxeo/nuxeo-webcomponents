@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<project name="webc" default="web-tomcat" basedir=".">
+
+  <import file="../../nuxeo/build.xml" />
+  <property file="build.properties" />
+
+</project>

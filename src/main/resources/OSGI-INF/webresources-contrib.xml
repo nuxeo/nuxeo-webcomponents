@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.platform.webcomponents.webresources">
+
+  <extension target="org.nuxeo.ecm.platform.WebResources" point="resources">
+
+    <resource name="polymer.html">
+      <path>polymer/polymer.html</path>
+    </resource>
+
+    <resource name="polymerpatch.js">
+      <path>META-INF/resources/polymer/whenImportReadyPatch.js</path>
+    </resource>
+
+    <resource name="test_bare.html">
+      <path>META-INF/resources/webc/test_bare.html</path>
+    </resource>
+
+  </extension>
+
+  <extension target="org.nuxeo.ecm.platform.WebResources" point="resourceBundles">
+
+    <resourceBundle name="polymer">
+      <resources>
+        <resource>polymer.html</resource>
+        <resource>polymerpatch.js</resource>
+      </resources>
+    </resourceBundle>
+
+  </extension>
+
+</component>

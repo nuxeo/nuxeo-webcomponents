@@ -8,5 +8,7 @@ Require-Bundle: org.nuxeo.ecm.platform.forms.layout.api
 Bundle-Category: stateless
 Nuxeo-Component: OSGI-INF/widgettypes-contrib.xml,
  OSGI-INF/layout-converters-contrib.xml,
- OSGI-INF/layouts-framework.xml
+ OSGI-INF/layouts-framework.xml,
+ OSGI-INF/webresources-contrib.xml,
+ OSGI-INF/actions-contrib.xml
 Nuxeo-WebModule: org.nuxeo.ecm.platform.webcomponents.layout.rest.WebComponentApp;name=webc;extends=base

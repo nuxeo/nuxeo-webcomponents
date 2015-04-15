@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:nxthemes="http://nuxeo.org/nxthemes"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:nxwebr="http://nuxeo.org/nxweb/resources"
+  xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+  <f:view contentType="text/html" />
+  <h:head id="pageHead">
+    <title>
+      <ui:insert name="page title">Page title</ui:insert>
+    </title>
+
+    <ui:insert name="imports"></ui:insert>
+
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes"></meta>
+    <h:outputScript name="webc/webcomponentsjs/webcomponents.js" target="head" />
+    <nxwebr:import name="webc/font-roboto/roboto.html" target="head" />
+    <nxwebr:resourceBundle name="polymer" target="head" />
+
+    <nxwebr:import src="/components/nuxeo-elements/nx-connection.html" target="head" />
+    <nxwebr:import src="/components/nuxeo-elements/nx-resource.html" target="head" />
+    <nxwebr:import src="/components/nuxeo-elements/layout-service/nx-layout-service.html" target="head" />
+    <nxwebr:import src="/components/nuxeo-elements/layouts/nx-form-layout.html" target="head" />
+
+    <style>
+
+      body {
+        margin: 0;
+        height: 100%;
+        font-family: 'RobotoDraft', sans-serif;
+      }
+
+      core-toolbar {
+        background: #03a9f4;
+        color: white;
+      }
+
+      .container {
+        width: 80%;
+        margin: 50px auto;
+      }
+      table {
+        width: 100%;
+      }
+      table th {
+        text-transform: uppercase;
+        font-size: 14px;
+        text-align: left;
+        padding-right: 40px;
+        border-bottom: 1px solid #eee;
+        font-weight: 500;
+        line-height: 48px;
+      }
+      table td {
+        padding: 0;
+        margin: 0;
+        vertical-align: top;
+        padding: 12px 12px 12px 0;
+      }
+
+      div {
+        padding: 0;
+        margin: 0;
+        vertical-align: top;
+        padding: 12px 12px 12px 0;
+      }
+
+      html /deep/ input[is=core-input] {
+        border-bottom: 1px dotted #ccc;
+      }
+  </style>
+
+  </h:head>
+  <h:body>
+
+  <div fullbleed="fullbleed" vertical="vertical" layout="layout">
+    <div>
+    Test
+    </div>
+
+    <nx-connection id="nx_connection"
+      url="http://localhost:8080/nuxeo"
+      username="Administrator"
+      password="Administrator">
+    </nx-connection>
+    <template is="auto-binding">
+
+      <nx-resource auto="auto" id="doc" path="/path#{currentDocument.pathAsString}" data="{{doc}}"></nx-resource>
+
+      Doc: {{doc}}
+
+      Form layout example: dublincore on {{doc.properties['dc:title']}}
+      <nx-form-layout name="dublincore" mode="edit" valueH="{{doc}}">
+      </nx-form-layout>
+
+    </template>
+
+  </div>
+
+  </h:body>
+</html>
