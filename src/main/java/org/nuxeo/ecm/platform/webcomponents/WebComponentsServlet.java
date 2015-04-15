@@ -89,7 +89,7 @@ public class WebComponentsServlet extends HttpServlet {
     private static final String BOWER_PACKAGE = "/package.zip";
 
     // resource paths
-    private static final String STATIC_PATH = "/public";
+    private static final String STATIC_PATH = "/META-INF/resources/webc";
     private static final String TEMPLATE_PATH = "/templates";
 
     // prefix for our template resources
