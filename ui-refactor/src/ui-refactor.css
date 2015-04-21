@@ -1,0 +1,6 @@
+/* Custom styles for demo */
+
+/* remove all links by default except those explicitly activated */
+a:not(.demoActivated) {
+  pointer-events: none;
+}
