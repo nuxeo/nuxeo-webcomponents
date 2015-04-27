@@ -11,15 +11,16 @@ possible evolutions to these configurations.
 
 ## How to view the pages
 
-Checkout the nuxeo-webcomponents project, and open each of the HTML files from this
-folder in a browser.
+Checkout the nuxeo-webcomponents project, and open each of the HTML files from
+this folder in a browser.
 
 
 ## About the current structure
 
 There are only few changes to the originally saved HTML:
 - links have been disabled
-- select2 widgets were showing the suggestion box, these have been manually fixed
+- select2 widgets were showing the suggestion box, these have been manually
+  fixed
 - the dev container content has been changed for the purpose of this doc.
 
 It is important to note that the dev mode is changing the DOM content
@@ -291,8 +292,8 @@ Besides the type and category, there are other metadata common to all elements:
 
 #### Label & Translation
 
-All elements can have a label, and a notion of whether this label should be translated
-or not:
+All elements can have a label, and a notion of whether this label should be
+translated or not:
 
     <element name="document_management" type="page" category="jsf">
       <label>label.document.management<label>
@@ -310,14 +311,503 @@ On a document form:
 
 #### Properties
 
-Depending on properties supported by the given type,
+Properties represent small variations in the element rendering:
+
+    <element name="document_management" type="page" category="jsf">
+      <properties>
+        <property name="styleClass">mainPage</property>
+      </properties>
+      ...
+    </element>
+
+On a document form:
+
+    <element name="title" category="jsf" type="text">
+      <properties>
+        <property name="styleClass">dataInput</property>
+      </properties>
+      ...
+    </element>
+
+Supported properties are declared on the corresponding element type, and accept
+default values held by the element type configuration.
+
+The properties can also accept expressions depending on the target rendering
+technology:
+
+    <element name="title" category="jsf" type="text">
+      <properties mode="edit">
+        <property name="required">#{not currentUser.administrator}</property>
+      </properties>
+      ...
+    </element>
+
+    <element name="title" category="jsf" type="text">
+      <properties mode="edit">
+        <property name="required">{{currentUserIsAdmin}}</property>
+      </properties>
+      ...
+    </element>
 
 
-- properties
-- controls
-- binding
-- sub elements
-- resources
-- filters
+#### Controls
+
+Controls represent small variations in the element behavior.
+
+The difference with properties can be subtle. In general, controls are like
+properties that can be looked up by the parent element, to control behaviors
+like:
+- label rendering
+- addition of a form around the widget
+- style class on the element, applied by the parent element (grid style class,
+  for instance)
+
+    <element name="document_management" type="page" category="jsf">
+      <controls>
+        <control name="addForm">true</control>
+      </controls>
+      ...
+    </element>
+
+On a document form:
+
+    <element name="title" category="jsf" type="text">
+      <controls>
+        <control name="addForm">true</control>
+      </controls>
+      ...
+    </element>
+
+Supported controls are declared on the corresponding element type, as well
+as parent element type. They accept default values as held by the element
+type(s) configurations (element type configuration wins over parent element
+type configuration).
+
+Similarly to properties, the controls can also accept expressions depending on
+the target rendering technology.
+
+#### Binding
+
+Bindings represent the values that the widget will apply to.
+
+When the corresponding value is read-only (cannot be edited thanks to the
+element), it could be passed to the target element as a widget property, but
+it's cleaner to consider these variables as "input context variables" and treat
+them independently from properties when defining a widget type: these variables
+will usually be derived from the context that the element applies to (see the
+"About elements usage" section).
+
+The easiest way to define a binding is to refer to the target field (when the
+input parent element is bound to a document model:
+
+    <element name="title" category="jsf" type="text">
+      <bindings>
+        <binding name="value">dc:title</control>
+      </bindings>
+      ...
+    </element>
+
+When no name is specified, and only one field is defined, the name "value" can
+be omitted:
+
+    <element name="title" category="jsf" type="text">
+      <bindings>
+        <binding>dc:title</control>
+      </bindings>
+      ...
+    </element>
+
+By default, the binding named "value" is "inherited" to sub elements (see
+chapter about sub elements). A binding can be marked explicitely as inherited
+like this:
+
+    <element name="title" category="jsf" type="text">
+      <bindings>
+        <binding name="foo" inherit="true">dc:title</control>
+      </bindings>
+      ...
+    </element>
+
+Only one binding can be marked as inherited. When doing so, the "base binding"
+for the sub element will be the resolved value of this binding.
+
+The bindings can also accept expressions depending on the target rendering
+technology:
+
+    <element name="title" category="jsf" type="text">
+      <bindings>
+        <binding name="foo" inherit="true">#{mydoc.dc.title}</control>
+      </bindings>
+      ...
+    </element>
+
+    <element name="title" category="jsf" type="text">
+      <bindings>
+        <binding name="foo" inherit="true">{{task}}</control>
+      </bindings>
+      ...
+    </element>
+
+
+This binding notion replaces the "fields" notion on widgets, opening the
+possibility to "named context variables" that are made available to the
+elements context (instead of unnamed field variables field_0, field_1, etc...).
+Bindings with no name will still depend on this naming for compatibility.
+
+
+#### Sub Elements
+
+Accepting sub elements is useful for UI composition.
+
+In the current layout/widget system, the following configurations are possible:
+- define a list of sub widgets
+- define a list of sub widget references (to reuse global widgets)
+- define rows/row/widgets or columns/column/widgets configurations, with
+  accepted properties in the row or column configuration
+
+Ideally, all these possibilities should be kept for the existing use cases,
+but extended to all elements (which configuration would state how sub elements
+can be declared and used).
+
+The following configurations will then be available (only one configuration,
+or several of them, depending on the element type):
+
+    <element name="title" category="jsf" type="text">
+      ...
+      <subElements>
+        <element name="subtitle" category="jsf" type="text">
+          ...
+        </element>
+      </subElements>
+    </element>
+
+    <element name="title" category="jsf" type="text">
+      ...
+      <subElementRefs>
+        <elementRef name="subtitle" category="jsf" />
+      </subElements>
+    </element>
+
+    <element name="title" category="jsf" type="text">
+      ...
+      <rows>
+        <row>
+          <element>subtitle</element>
+        </row>
+      <rows>
+      <element name="subtitle" ...>
+        ...
+      </element>
+    </element>
+
+
+Sometimes it can also be useful to group sub elements by name, the following
+syntax is then allowed:
+
+    <element name="title" category="jsf" type="text">
+      ...
+      <subElements group="header">
+        <element name="subtitle" category="jsf" type="text">
+          ...
+        </element>
+      </subElements>
+      <subElements group="footer">
+        <element name="details" category="jsf" type="text">
+          ...
+        </element>
+      </subElements>
+    </element>
+
+
+#### Resources
+
+Both an element and an element type can declare "web resources" that are
+required for the element to be rendered correctly.
+
+These resources are looked up and added to the page header on demand.
+
+    <element name="title" category="jsf" type="foldableBox">
+      ...
+      <resources>
+        <resource>jquery.js</resource>
+        <resource>foldable-box.js</resource>
+        <resource>foldable-box.css</resource>
+      </resources>
+    </element>
+
+The named resources need to be declared on the "resources" extension point of
+the runtime component "org.nuxeo.ecm.platform.WebResources".
+
+Alternatively, resource bundles can be declared:
+
+    <element name="document_management" type="page" category="jsf">
+      ...
+      <resourceBundles>
+        <bundle>foldable_box</bundle>
+      </resourceBundles>
+    </element>
+
+The same configuration can be held by the element type:
+
+    <element-type name="page" category="jsf">
+      ...
+      <resourceBundles>
+        <bundle>foldable_box</bundle>
+      </resourceBundles>
+    </element>
+
+
+Warning: sometimes resources cannot be looked up dynamically, there are some
+ajax use cases where the head tag will not be re-rendered on JSF current
+behavior. In this case, the new element types should contribute to a "common"
+bundle that is declared and used explicitly on all pages.
+
+
+#### Filters
+
+Filters can be attached to elements configuration to allow hiding some elements
+depending on contextual use cases.
+
+    <element name="title" category="jsf" type="text">
+      ...
+      <filters append="true">
+        <filter-id>foo</resource>
+        <filter-id>bar</resource>
+      </filters>
+      <filter name="foo">
+        ...
+      </filter>
+    </element>
+
+The filter definition is identical to the current filter definition in actions,
+expect it can have access to additional context variables provided by elements
+rendering logics (to be defined).
+
+The potential "expression" conditions held by filter depend on the target
+rendering technology (could be EL expressions, resolved server side, when using
+the Seam/JSF UI).
+
+Filters can be defined globally or locally (like elements), but when defined
+locally, they are only accessible from this element configuration (similarly
+to current local widgets definitions) -- this changes the behavior compared
+to current action filters management.
+
+Note that filters configuration replaces the pseudo mode "hidden" on widget
+modes configuration (see section about "Mode management").
+
+
+#### Incremental Elements
+
+Some elements can be defined "globally" and inserted inside the rendering of
+a page because of "place holder" elements referencing them.
+
+Sample element:
+
+    <element name="saveDocument" category="jsfAction" type="action">
+      ...
+      <flags>
+        <flag name="foo" />
+      </flags>
+    </element>
+
+The "foo" flag is a marker that makes it possible to lookup all elements using
+the same flag:
+
+    <element name="formActions" category="jsf" type="incremental">
+      ...
+      <properties>
+        <property name="flag">foo</property>
+      </properties>
+    </element>
+
+An additional "ordering" information can be added to the original element, to
+control sorting of elements (fallbacks to an alphabetical ordering on the
+element name):
+
+    <element name="saveDocument" category="jsfAction" type="action">
+      ...
+      <flags>
+        <flag name="foo" order="20" />
+      </flags>
+    </element>
+
 
 ### Mode management
+
+Each of the following confs can be changed depending on the target mode, to
+make it possible to share a given widget configuration in different use cases.
+
+- labels
+- properties
+- controls
+
+If needed, more configuration elements will be added to this list in the
+future.
+
+This allows the following alternative configurations in the case of properties
+(controls accept a configuration similar to properties):
+
+    <element name="title" category="jsf" type="text">
+      <labels>
+        <label mode="edit">The label in edit mode</label>
+        <label mode="view">The label in view mode</label>
+      </labels>
+      ...
+    </element>
+
+    <element name="title" category="jsf" type="text">
+      <properties mode="edit">
+        <property name="styleClass">dataInput</property>
+      </properties>
+      ...
+    </element>
+
+The label without a mode is considered to be valid in any mode, which makes
+the following configurations equivalent:
+
+    <element name="title" category="jsf" type="text">
+      <label>The label</label>
+      ...
+    </element>
+
+    <element name="title" category="jsf" type="text">
+      <labels>
+        <label mode="any">The label</label>
+      </labels>
+      ...
+    </element>
+
+The properties without a mode are considered to be valid in any mode, which
+makes the following configurations equivalent:
+
+    <element name="title" category="jsf" type="text">
+      <properties>
+        <property name="styleClass">dataInput</property>
+      </properties>
+      ...
+    </element>
+
+    <element name="title" category="jsf" type="text">
+      <properties mode="any">
+        <property name="styleClass">dataInput</property>
+      </properties>
+      ...
+    </element>
+
+The attribute widgetMode on properties is deprecated: all properties depending
+on a mode are now supposed to depend on the final widget mode.
+
+The pseudo mode "hidden" is now deprecated: widgets that should be removed
+from the rendering should be filtered using filters configuration instead.
+
+The mode resolution now relies on the following logics: if target element type
+defines a mode resolution logic, use it, otherwise fallback on an explicit
+mode resolution logic specified in the element definition.
+
+For instance, the current default resolution from a layout mode to a widget
+mode will be available using a simple expression in the context, for instance:
+
+    <element name="title" category="jsf" type="text">
+      <widgetModes>
+        <mode value="any">#{nxl:getWidgetModeFromLayoutMode(layoutMode)}</mode>
+      </widgetModes>
+      ...
+    </element>
+
+(of course, the function name and namespace can be changed according to new
+namings)
+
+A "readonly" element configuration would look like:
+
+    <element name="title" category="jsf" type="text">
+      <widgetModes>
+        <mode value="edit">view</mode>
+      </widgetModes>
+      ...
+    </element>
+
+
+## About elements usage
+
+The elements can be referred by name and type to be rendered on the target
+technology.
+
+Sample JSF example:
+
+    <nx:element name="title" category="jsf" mode="edit" value="#{currentDocument}" />
+
+Sample WebComponent example:
+
+    <nx-element name="title" category="webc" mode="edit" value="{{doc}}"></nx-element>
+
+Since the "value" binding(s) can now be multiple, additional attributes can be
+accepted by the tag(s):
+
+    <nx:element name="title" category="jsf" mode="edit" value="#{currentDocument}"
+      binding_foo="#{otherDoc}" />
+
+The following declarations are equivalent:
+
+    <nx:element name="title" category="jsf" mode="edit" value="#{currentDocument}" />
+    <nx:element name="title" category="jsf" mode="edit" binding_value="#{currentDocument}" />
+
+This will define or override the given binding(s) on the rendered element.
+
+Similarly, properties and controls can be defined or overridden on the rendered
+element:
+
+    <nx:element name="title" category="jsf" mode="edit" value="#{currentDocument}"
+      property_required="#{currentUser.administrator}" />
+
+On WebComponents, an alternative syntax could be used:
+
+    <nx-element name="title" category="webc" mode="edit"
+      bindings="{'value': {{doc}}, foo: {{otherDoc}}"
+      properties="{'required': {{elemrequired}}}">
+    </nx-element>
+
+Or for single binding use case:
+
+    <nx-element name="title" category="webc" mode="edit"
+      value="{{doc}}"
+      properties="{'required': {{elemrequired}}}">
+    </nx-element>
+
+There are some use cases where the element could be built directly from the
+rendering technology.
+
+Sample JSF example:
+
+    <nxl:widgetType name="textarea" category="jsf" mode="view"
+      value="#{currentRoute.description}"
+      styleClass="documentDescription quote" />
+
+Sample WebComponent example:
+
+    <nx-element-type name="title" category="webc" mode="view"
+      value="{{currentRoute.description}}"
+      properties="{'styleClass': 'documentDescription quote'">
+    </nx-element-type>
+
+In the case of webcomponents, additionnal tags can be defined to help working
+with "builtin Nuxeo elements", for instance:
+
+    <nx-form-layout name="dublincore" mode="edit" value="{{doc}}">
+    </nx-form-layout>
+
+This tag would implement the logics to retrieve the element named "dublincore"
+in category "webc" and iterate over sub elements to provide the corresponding
+rendering.
+
+TODO: insert Nelson's POC use case here.
+
+
+## TODO
+
+There are already some use cases where layouts are retrieved from the document
+type configuration => these configurations will have to be updated to refer to
+elements instead.
+
+- Define merging/override logics on elements and element types.
+- Check validation/conversion use cases (?)
+- check automation user actions integration (?)
