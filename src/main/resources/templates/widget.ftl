@@ -30,7 +30,11 @@ Lesser General Public License for more details.
 
 <polymer-element name="${tag}" attributes="mode value connectionId" noscript>
     <template>
-        <#assign field = widget.fieldDefinitions[0].propertyName />
-        <${widget.type} mode="{{mode}}" value="{{value.properties['${field}']}}" connectionId="{{connectionId}}"></${widget.type}>
+        <#assign value = "value" />
+        <#if widget.fieldDefinitions >
+            <#assign field = widget.fieldDefinitions[0].propertyName />
+            <#assign value = "value.properties['${field}']" />
+        </#if>
+        <${widget.type} mode="{{mode}}" value="{{${value}}}" connectionId="{{connectionId}}"></${widget.type}>
     </template>
 </polymer-element>

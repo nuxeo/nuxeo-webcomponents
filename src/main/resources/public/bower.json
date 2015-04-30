@@ -1,0 +1,13 @@
+{
+  "name": "nuxeo-elements",
+  "version": "0.0.1",
+  "description": "Nuxeo Web Components",
+  "license": "LGPL",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#>=0.5.0 <1.0.0",
+    "core-elements": "Polymer/core-elements#>=0.5.0 <1.0.0",
+    "nuxeo": "^0.4.1",
+    "es6-promise": "^2.0.0"
+  }
+}

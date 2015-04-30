@@ -34,6 +34,7 @@ import org.nuxeo.ecm.platform.rendering.api.ResourceLocator;
 import org.nuxeo.ecm.platform.rendering.api.View;
 import org.nuxeo.ecm.platform.rendering.fm.FreemarkerEngine;
 
+import org.nuxeo.ecm.platform.webcomponents.bower.BowerPackage;
 import org.nuxeo.ecm.platform.webcomponents.metadata.ElementMetadata;
 import org.nuxeo.runtime.api.Framework;
 
@@ -56,8 +57,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * Servlet to produce web components from layouts and widgets.
@@ -161,6 +160,17 @@ public class WebComponentsServlet extends HttpServlet {
         Matcher widgetMatcher = WIDGET_PATTERN.matcher(path);
         if (widgetMatcher.find()) {
             String tag = widgetMatcher.group(1);
+            /* TODO: rely on template widget definitions to allow overriding and handle widget type aliases
+            WidgetTypeDefinition def = getWidgetTypeDefinition(tag);
+            if (def != null) {
+                String template = def.getProperties().get("template");
+                if (template != null) {
+                    sendStatic(template, resp);
+                    return;
+                }
+            }*/
+
+            // send the widget
             view = getWidgetView(tag);
             if (view != null) {
                 send(view, resp);
@@ -185,31 +195,42 @@ public class WebComponentsServlet extends HttpServlet {
     protected void sendPackage(HttpServletResponse resp) throws IOException {
         resp.setContentType("application/zip");
         resp.setHeader("Content-Disposition", "attachment;filename=package.zip");
-        ZipOutputStream zos = null;
-        try {
-            zos = new ZipOutputStream(resp.getOutputStream());
-            for (LayoutDefinition layout : getLayouts()) {
-                addZipEntry(zos, "layouts/" + layout.getName() + ".html", getLayoutView(layout.getName()));
-            }
-            for (WidgetDefinition widget : getWidgets()) {
-                addZipEntry(zos, "widgets/" + widget.getName() + ".html", getWidgetView(widget.getName()));
-            }
-        } catch (IOException | RenderingException e) {
-            log.error("Failed to produce bower package", e);
-            send(e, resp);
-        } finally {
-            if (zos != null) {
-                zos.close();
+        BowerPackage bowerPackage = new BowerPackage();
+
+        String[] staticResources = new String[] {
+            "bower.json",
+            "core/nx-connection.html",
+            "core/nx-operation.html",
+            "core/nx-resource.html",
+            "core/nx-page-provider.html",
+            "widgets/nx-widget.html"
+        };
+        for (String resource : staticResources) {
+            bowerPackage.addEntry(resource, getResource(STATIC_PATH + "/" + resource));
+        }
+        for (LayoutDefinition layout : getLayouts()) {
+            View view = getLayoutView(layout.getName());
+            bowerPackage.addEntry("layouts/" + layout.getName() + ".html", (os) -> render(view, os));
+        }
+        for (WidgetDefinition widget : getWidgets()) {
+            View view = getWidgetView(widget.getName());
+            bowerPackage.addEntry("widgets/" + widget.getName() + ".html", (os) -> render(view, os));
+        }
+        for (WidgetTypeDefinition widgetType : getWidgetTypes()) {
+            String template = widgetType.getProperties().get("template");
+            if (template != null) {
+                // TODO: handle widget type aliases
+                InputStream is = getResource(STATIC_PATH + template);
+                if (is != null) {
+                    bowerPackage.addEntry("widgets/" + widgetType.getName() + ".html", is);
+                }
             }
         }
-    }
-
-    private void addZipEntry(ZipOutputStream zos, String name, View view) throws IOException, RenderingException {
-        ZipEntry entry = new ZipEntry(name);
-        zos.putNextEntry(entry);
-        view.render(zos);
-        zos.flush();
-        zos.closeEntry();
+        try {
+            bowerPackage.write(resp.getOutputStream());
+        } catch (IOException e) {
+            send(e, resp);
+        }
     }
 
     protected void send(View view, HttpServletResponse resp) throws IOException {
@@ -218,6 +239,14 @@ public class WebComponentsServlet extends HttpServlet {
         } catch (RenderingException e) {
             log.error("Unable to render " + view.getName(), e);
             send(e, resp);
+        }
+    }
+
+    protected void render(View view, OutputStream out) {
+        try {
+            view.render(out);
+        } catch (RenderingException e) {
+            log.error("Unable to render " + view.getName(), e);
         }
     }
 
@@ -272,7 +301,11 @@ public class WebComponentsServlet extends HttpServlet {
         for (LayoutRowDefinition row : def.getRows()) {
             for (WidgetReference widgetRef : row.getWidgetReferences()) {
                 WidgetDefinition widgetDef = def.getWidgetDefinition(widgetRef.getName());
-                widgets.add(widgetDef);
+                if (widgetDef != null) {
+                    widgets.add(widgetDef);
+                } else {
+                    log.warn("Failed to find widget definition for " + widgetRef.getName());
+                }
             }
         }
         return getTemplate("layout")

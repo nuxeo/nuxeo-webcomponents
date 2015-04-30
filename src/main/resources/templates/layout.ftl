@@ -36,13 +36,14 @@ Lesser General Public License for more details.
         <#list layout.rows as row>
             <#list row.widgetReferences as widgetRef>
                 <#assign widget = layout.getWidgetDefinition(widgetRef.name) />
-                <#if widget.global>
-                    <${widget.name} value="{{value}}" mode="{{mode}}" connectionId="{{connectionId}}"></${widget.name}>
-                <#else>
-                    <#assign field = widget.fieldDefinitions[0].propertyName />
-                    <${widget.type} value="{{value['${field}']}}" mode="{{mode}}" connectionId="{{connectionId}}"></${widget.type}>
+                <#if widget>
+                    <#if widget.global>
+                        <${widget.name} value="{{value}}" mode="{{mode}}" connectionId="{{connectionId}}"></${widget.name}>
+                    <#else>
+                        <#assign field = widget.fieldDefinitions[0].propertyName />
+                        <${widget.type} value="{{value['${field}']}}" mode="{{mode}}" connectionId="{{connectionId}}"></${widget.type}>
+                    </#if>
                 </#if>
-
             </#list>
          </#list>
     </template>
