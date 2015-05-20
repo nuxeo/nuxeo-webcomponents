@@ -29,11 +29,14 @@ heavy).
 
 However, looking at this source (and related dependencies), it is
 interesting to see that the way we currently handle CSS and JS
-resources is not that clean (a lot of inline resources, that should be
+resources is not very clean (a lot of inline resources, that should be
 moved to the head, and merged with other resources when possible).
 
 
 ## About the visible dev containers
+
+The dev containers that have been changed manually for this doc are made very
+visible thanks to the "tooltip" icon and a label text in red.
 
 There were a few additions to the originally visible slots for the
 following reasons:
@@ -56,7 +59,6 @@ Names currently used (layouts, widgets, actions etc...) are sometimes
 voluntarily not used to avoid mixing concepts, except when their
 current features already match their future usage (filters, for
 instance).
-
 
 ### Typed UI elements, for a given category
 
@@ -729,6 +731,8 @@ A "readonly" element configuration would look like:
 
 ## About elements usage
 
+### Specific tags to handle elements
+
 The elements can be referred by name and type to be rendered on the target
 technology.
 
@@ -739,6 +743,12 @@ Sample JSF example:
 Sample WebComponent example:
 
     <nx-element name="title" category="webc" mode="edit" value="{{doc}}"></nx-element>
+
+Whenever the mode is not important, it should default to "view" instead of
+being explicitly needed:
+
+    <nx:element name="title" category="jsf" value="#{currentDocument}" />
+    <nx-element name="title" category="webc" value="{{doc}}"></nx-element>
 
 Since the "value" binding(s) can now be multiple, additional attributes can be
 accepted by the tag(s):
