@@ -398,7 +398,7 @@ reviewed:
 
 Suggestion from Nelson: for the webcomponents use case, there are chances we
 could extract some of this configuration information from the polymer element
-stucture and documentation.
+structure, metadata and documentation (see [hydrolysis](https://github.com/Polymer/hydrolysis) a utility for analyzing polymer elements).
 
 
 ### The "template" special type
@@ -433,7 +433,7 @@ On a document form:
       ...
     </element>
 
-Suggestion from Nelson: move these elements as properties (?)
+Suggestion from Nelson: move these elements as properties. Does label really make sense for all elements (?)
 
 #### Properties
 
@@ -512,7 +512,9 @@ type configuration).
 Similarly to properties, the controls can also accept expressions depending on
 the target rendering technology.
 
-Suggestion from Nelson: rename "controls" to "behaviors"?
+Suggestions from Nelson: 
+  - if this is used to "represent small variations in the element behavior" we should rename "controls" to "behaviors"
+  - ultimately these should probably just be properties. (could be read-only)
 
 #### Binding
 
@@ -582,8 +584,26 @@ possibility to "named context variables" that are made available to the
 elements context (instead of unnamed field variables field_0, field_1, etc...).
 Bindings with no name will still depend on this naming for compatibility.
 
-Suggestion from Nelson: include the notion of two-way binding (wrt one way
-binding) for optims (?)
+Suggestions from Nelson:
+  - rename bindings to "scope" and binding to "property"
+```
+<scope>
+  <property name="prop1">dc:title</property>
+</scope>
+````
+  - rethink the way we "inherit" scopes. Do we need to name the "inherited" binding (?) We could use a wildcard name like "*" to expose all the fields in the value data as if they were set in the "base" scope, something like:
+```
+  <scope>
+    <property name="*">{{task}}</property>
+  </scope>
+```
+  - could be useful to include the notion of one-way and two-way binding. use something like 
+```
+  <scope>
+    <property name="prop1" notify="true">dc:title</property>
+  </scope>
+````
+  to propagate changes to the parent/host.
 
 
 #### Sub Elements
@@ -649,9 +669,9 @@ syntax is then allowed:
       </subElements>
     </element>
 
-Suggestion from Nelson: name the tag "elements" instead of "subElements".
-Also make the reference implicit (if not type is declared on the element,
-consider it's a reference, for instance).
+Suggestions from Nelson: 
+  - name the tag "elements" instead of "subElements".
+  - use <element ref="subtitle"> instead of "elementRef" and remove "subElements"
 
 
 #### Resources
@@ -712,6 +732,7 @@ Note that in this case, XMap processing will not make it possible to keep
 order of bundle and resource elements (all bundles will be processed first,
 then all resources, for instance).
 
+(Nelson: XMap is "forcing" us to go with more verbose solutions than we could come up with if we didn't take it into account)
 
 #### Filters
 
@@ -781,6 +802,7 @@ element name):
       </flags>
     </element>
 
+Nelson: "flags" are similar to content selectors. Could we select based on any of the existing properties of an element instead of having to declare "flags"?
 
 ### Mode management
 
