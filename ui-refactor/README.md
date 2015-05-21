@@ -49,11 +49,125 @@ following reasons:
   added because the goal is to make them serve by the layouts/widgets
   system
 
+I tried to include in this demo the typology of UI elements that Alain
+suggested whenever possible (some elements still to discuss). Included
+elements are in bold, elements to discuss are in italic.
+
+#### UI Basics
+
+- _Panel_
+- *HorizontalTabBar*
+- *VerticalTabBar*
+- Label
+- *Link*
+- *Button*
+- *Toolbar* (accepting "vertical", "horizontal" and "menu" renderings)
+- _TabBar_ -> same as above tabs bars, right?
+- *Dialog*
+- _DataGrid_
+
+AT Notes:
+
+- not sure what the Panel and DataGrid elements are about. Is the Panel the
+  current "container" widget type, and DataGrid the current "grid" layout type?
+- the *TabBar are currently handled by one single widget type, accepting
+  property "overall display" to control whether rendering is vertical or
+  horizontal -> do we really want to separate them and make distinct widget
+  types?
+- the Link and Button elements are currently handled by only one action type
+  "link" (accepts a property to display as button).
+- the Dialog is the equivalent of the current action type named "fancybox".
+- the "Label" element does not exist, but would be the equivalent of the
+  "Header" widget type defined by Studio (and not available on Studio side).
+  Note that users may start wanting "text" or "paragraph" elements to go with
+  that.
+- I would add the "page" element type here too.
+
+
+#### Data Input
+
+- *Text*
+- Monetary
+- *Textarea*
+- RichText
+- *File*
+- *Dropdown Suggest* (no more chained select etc)
+- Checkbox
+- RadioButton
+- *Calendar*
+- *List of Values*
+- Document Suggest
+- *User Suggest*
+- *Path*
+
+AT Notes:
+
+- we may still find it useful to make the distinction between element types
+  handling single values, and element types handling multiple values (to ease up
+  detection of default element type to apply to a given field, depending on its
+  type). But we might want to handle this with a property that would be named
+  "multiple" for all types (?).
+- we missing the "Integer/Float/Double" element types in this list, right?
+  Note that these (as well as "Monetary") might depend on current user locale,
+  as conventions vary between countries (maybe not that important here?).
+
+
+#### ECM (Content Management, Workflow, DAM)
+
+##### Content Management
+
+- Document Form
+- Versionning Options
+- Linked Documents
+- Document Comments
+- Document Display
+- List of Renditions
+- Generic Repository Document Picker (for integration)
+- Document History
+- Document List of Versions
+- Collection Assignment
+- List of Collections
+- Dropzone (that convert into a document straight forward)
+
+AE Note: for content view, I feel like we should have the DataGrid and plug it
+to page provider, but not necessarily one that does all (to be discussed)
+
+AT notes: I'm not sure about this typology, a lot of elements are missing (like
+the "Content view" or the "toggleable layout" or "document layouts" element
+types) compared to what we currently have. Some of these elements seem more like
+"definitions" than "types" (list of collections -> is it a "preconfigured"
+content view widget type, displaying collections for current document,
+for instance?)
+
+
+##### Workflow
+
+- Assigned Tasks List
+- Task Resolution
+- Workflow Instance Launcher
+- Workflow Instance Graph
+
+
+AT notes: same, looks like "preconfigured" widget types, similar to what the
+summary is currently displaying.
+
+
+##### DAM
+
+- Image Viewer
+- Video Player
+- Video Story Board
+- List of conversions (more info than generic list of renditions)
+- Media Technical Info
+
+AT notes: not displayed in current demo, but currently existing (most of), no
+issue, a priori.
+
 
 ## About the target metamodel
 
 Here is a presentation about the new UI metamodel presented by this
-demo. Please play with the demo before reading this.
+demo. Please play with the demo while reading this.
 
 Names currently used (layouts, widgets, actions etc...) are sometimes
 voluntarily not used to avoid mixing concepts, except when their

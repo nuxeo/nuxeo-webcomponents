@@ -44,30 +44,117 @@ var nxContextPath = "/nuxeo";
 </head>
 <body
   class="documentManagement galaxyDefaultCss2050261229 nxStyle13453556PageFrame">
+  <div style="position:absolute; top:0px; z-index: 3000">
+    <div id="nxw_PAGE_dev_region" class="nxlDevRegion">
+      <span style="color:red;">
+        <img src="src/tip.gif" />
+        Page
+      </span>
+      <div id="nxw_PAGE_dev_container" class="displayN nxlDevContainer">
+        <h4>Element 'document_management'</h4>
+        <div>
+          <span class="widgetLabel bold ">Type</span>:
+          <span>page (handle the head and body elements rendering, for instance)</span>
+        </div>
+        <div>
+          <span class="widgetLabel bold ">Label</span>:
+          <span>could be the page title (?)</span>
+        </div>
+        <div>
+          <span class="widgetLabel bold ">Resource bundles</span>:
+          <span>"jsf_common", gathering theme page + includes.xhtml resources + additional specific CSS files for this page</span>
+        </div>
+        <div>
+          <span class="widgetLabel bold ">Bindings</span>:
+          <span>Current Document (?) could be useful for the page title (or none)</span>
+        </div>
+        <div>
+          <span class="widgetLabel bold ">(Sub) Elements</span>:
+          <span>Header element on top, left column, main templating "body" area on right column, footer on bottom (maybe also keep the breadcrumb banner on top of right column, like in current theme page).</span>
+        </div>
+        <div>
+          <span class="widgetLabel bold ">Properties</span>:
+          <span>Flavor, to be referenced for resources import.</span>
+        </div>
+        <br />
+        <div>
+          <span class="widgetLabel bold ">Currently exists?</span>
+          <span>no</span>
+        </div>
+        <div>
+          <span class="widgetLabel bold ">Compat possible?</span>
+          <span>partial only (removal of some theme features like negotiators and perspectives)</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <div></div>
   <table summary="" class="themeSectionFrame nxHeader" border="0"
-    cellpadding="0" cellspacing="0">
+    cellpadding="0" cellspacing="0" style="top:0px;">
     <tbody>
       <tr>
-        <td class="themeCellFrame logo" valign="top"><div
-            class="menu">
-            <div class="siteLogo">
-              <form id="j_idt1212" name="j_idt1212" method="post"
-                action="/nuxeo/view_documents.faces?conversationId=0NXMAIN"
-                class="doubleClickShielded"
-                enctype="application/x-www-form-urlencoded">
-                <input name="j_idt1212" value="j_idt1212" type="hidden">
-                <a href="#"
-                  onclick="mojarra.jsfcljs(document.getElementById('j_idt1212'),{'j_idt1212:j_idt1213':'j_idt1212:j_idt1213'},'');return false"><img
-                  src="Nuxeo%20Platform%20-%20Default%20domain_files/nuxeo_logo.png"
-                  alt="Nuxeo" title="Nuxeo" height="20" width="113"></a><input
-                  name="javax.faces.ViewState"
-                  id="j_id1:javax.faces.ViewState:0"
-                  value="9008162018323751020:2403398468548780037"
-                  autocomplete="off" type="hidden">
-              </form>
+        <td class="themeCellFrame logo" valign="top">
+          <div id="nxw_LOGO_dev_region" class="nxlDevRegion">
+            <div id="nxw_LOGO_dev_container" class="displayN nxlDevContainer">
+              <h4>Element 'logo'</h4>
+              <div>
+                <span class="widgetLabel bold ">Type</span>:
+                <span>logo (could harcode link to home page)</span>
+              </div>
+              <div>
+                <span class="widgetLabel bold ">Label</span>:
+                <span>N/A (could be the logo title (?))</span>
+              </div>
+              <div>
+                <span class="widgetLabel bold ">Resource bundles</span>:
+                <span>N/A</span>
+              </div>
+              <div>
+                <span class="widgetLabel bold ">Bindings</span>:
+                <span>Current Document (?) or none</span>
+              </div>
+              <div>
+                <span class="widgetLabel bold ">(Sub) Elements</span>:
+                <span>N/A</span>
+              </div>
+              <div>
+                <span class="widgetLabel bold ">Properties</span>:
+                <span>Flavor, to retrieve corresponding logo.</span>
+              </div>
+              <br />
+              <div>
+                <span class="widgetLabel bold ">Currently exists?</span>
+                <span>no</span>
+              </div>
+              <div>
+                <span class="widgetLabel bold ">Compat possible?</span>
+                <span>partial only (removal of some theme features like negotiators and perspectives)</span>
+              </div>
             </div>
-          </div></td>
+            <div class="menu">
+              <div class="siteLogo">
+                <span style="color:red;">
+                  <img src="src/tip.gif" />
+                  Logo
+                </span>
+                <form id="j_idt1212" name="j_idt1212" method="post"
+                  action="/nuxeo/view_documents.faces?conversationId=0NXMAIN"
+                  class="doubleClickShielded"
+                  enctype="application/x-www-form-urlencoded">
+                  <input name="j_idt1212" value="j_idt1212" type="hidden">
+                  <a href="#"
+                    onclick="mojarra.jsfcljs(document.getElementById('j_idt1212'),{'j_idt1212:j_idt1213':'j_idt1212:j_idt1213'},'');return false"><img
+                    src="Nuxeo%20Platform%20-%20Default%20domain_files/nuxeo_logo.png"
+                    alt="Nuxeo" title="Nuxeo" height="20" width="113"></a><input
+                    name="javax.faces.ViewState"
+                    id="j_id1:javax.faces.ViewState:0"
+                    value="9008162018323751020:2403398468548780037"
+                    autocomplete="off" type="hidden">
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
         <td class="themeCellFrame content" valign="top">
 
           <div class="userServicesBlock">
@@ -79,11 +166,15 @@ var nxContextPath = "/nuxeo";
                   <h4>Widget 'mainTabs'</h4>
                   <div>
                     <span class="widgetLabel bold ">Type</span>: <span
-                      id="nxw_type" dir="auto">documentActionsWithForms</span>
+                      id="nxw_type" dir="auto">documentActionsWithForms, will be migrated to toolbarWithForms</span>
+                  </div>
+                  <div>
+                    <span class="widgetLabel bold ">Bindings</span>:
+                    <span>current Document for filters resolution</span>
                   </div>
                   <div>
                     <span class="widgetLabel bold ">Mode</span>: <span
-                      id="nxw_mode" dir="auto">view</span>
+                      id="nxw_mode" dir="auto">view (will be migrated to none, implicitely view)</span>
                   </div>
                   <div>
                     <span class="widgetLabel bold ">Properties</span>:
@@ -102,12 +193,26 @@ var nxContextPath = "/nuxeo";
                     <div>
                       <span style="font-style: italic;">currentAction</span>:
                       #{webActions.getCurrentTabAction('MAIN_TABS')}
+                      -->  will be migrated to use flags on elements
                     </div>
+                  </div>
+                  <br />
+                  <div>
+                    <span class="widgetLabel bold ">Currently exists?</span>
+                    <span>yes</span>
+                  </div>
+                  <div>
+                    <span class="widgetLabel bold ">Compat possible?</span>
+                    <span>yes</span>
                   </div>
 
                 </div>
               </div>
               <div id="nxw_mainTabs_panel" class="mainTabs">
+                <span style="color:red; align:left;" class="clear">
+                  <img src="src/tip.gif" />
+                  Header actions
+                </span>
                 <ul>
                   <li class="  "><div id="nxw_home_dev_region"
                       class="nxlDevRegion">
@@ -115,7 +220,7 @@ var nxContextPath = "/nuxeo";
                         class="displayN nxlDevContainer">
                         <div>
 
-                          <h4>Action 'home'</h4>
+                          <h4>Action 'home' -> Element "home"</h4>
                           <div>
                             <span class="widgetLabel bold ">Type</span>:
                             <span id="nxw_type_1" dir="auto">main_tab</span>
@@ -123,7 +228,7 @@ var nxContextPath = "/nuxeo";
                           <div>
                             <span class="widgetLabel bold ">Action
                               Categories</span>: <span id="nxw_categories"
-                              dir="auto">[MAIN_TABS]</span>
+                              dir="auto">[MAIN_TABS] -> flags [MAIN_TABS]</span>
                           </div>
                           <div>
                             <span class="widgetLabel bold ">Label</span>:
@@ -131,19 +236,32 @@ var nxContextPath = "/nuxeo";
                           </div>
                           <div>
                             <span class="widgetLabel bold ">Order</span>:
-                            <span id="nxw_order" dir="auto">20</span>
+                            <span id="nxw_order" dir="auto">20 -> flag order</span>
                           </div>
                           <div>
                             <span class="widgetLabel bold ">Immediate</span>:
-                            <span id="nxw_immediate" dir="auto">false</span>
+                            <span id="nxw_immediate" dir="auto">false -> handled as property</span>
                           </div>
                           <div>
                             <span class="widgetLabel bold ">Link</span>:
-                            <span id="nxw_link" dir="auto">view_home</span>
+                            <span id="nxw_link" dir="auto">view_home -> handled as property</span>
+                          </div>
+                          <br />
+                          <div>
+                            <span class="widgetLabel bold ">Currently exists?</span>
+                            <span>yes</span>
+                          </div>
+                          <div>
+                            <span class="widgetLabel bold ">Compat possible?</span>
+                            <span>yes</span>
                           </div>
 
                         </div>
                       </div>
+                      <span style="color:red; align:left;" class="clear">
+                        <img src="src/tip.gif" />
+                        Sample main tab link
+                      </span>
                       <a
                         onclick="if(!(event.ctrlKey||event.shiftKey||event.metaKey||event.button==1)){this.href='http:\/\/localhost:8080\/nuxeo\/nxhome\/default\/default-domain@view_home?tabIds=MAIN_TABS%3Ahome&amp;conversationId=0NXMAIN'}"
                         href="http://localhost:8080/nuxeo/nxhome/default/default-domain@view_home?tabIds=MAIN_TABS%3Ahome"
@@ -3344,6 +3462,7 @@ var nxContextPath = "/nuxeo";
                 </div>
               </div>
               <div id="nxw_documentTabs_dev_region" class="nxlDevRegion">
+                <img src="src/tip.gif" /><span style="color:red">Tabs (does not include doc title and upper actions: highlighting is misleading)</span>
                 <div id="nxw_documentTabs_dev_container"
                   class="displayN nxlDevContainer">
                   <div>
@@ -3355,7 +3474,7 @@ var nxContextPath = "/nuxeo";
                     </div>
                     <div>
                       <span class="widgetLabel bold ">Mode</span>: <span
-                        id="nxw_mode_15" dir="auto">view</span>
+                        id="nxw_mode_15" dir="auto">view -> now implicit</span>
                     </div>
                     <div>
                       <span class="widgetLabel bold ">Properties</span>:
@@ -3381,19 +3500,35 @@ var nxContextPath = "/nuxeo";
                       </div>
                     </div>
 
+                    <br />
+                    <div>
+                      <span class="widgetLabel bold ">Currently exists?</span>
+                      <span>yes</span>
+                    </div>
+                    <div>
+                      <span class="widgetLabel bold ">Compat possible?</span>
+                      <span>yes</span>
+                    </div>
+                    <div>
+                      <span class="widgetLabel bold ">Notes</span>
+                      <span>Actions notions migrated to elements</span>
+                    </div>
+
                   </div>
                 </div>
                 <div id="nxw_documentTabs_panel" class="tabsBar ">
 
                   <ul>
-                    <li class="selected"><div
+                    <li class="selected">
+                    <img src="src/tip.gif" /><span style="color:red">Tab element</span>
+                    <div
                         id="nxw_TAB_CONTENT_dev_region"
                         class="nxlDevRegion">
                         <div id="nxw_TAB_CONTENT_dev_container"
                           class="displayN nxlDevContainer">
                           <div>
 
-                            <h4>Action 'TAB_CONTENT'</h4>
+                            <h4>Action 'TAB_CONTENT' -> Element 'TAB_CONTENT'</h4>
                             <div>
                               <span class="widgetLabel bold ">Type</span>:
                               <span id="nxw_type_49" dir="auto">rest_document_link</span>
@@ -3401,7 +3536,7 @@ var nxContextPath = "/nuxeo";
                             <div>
                               <span class="widgetLabel bold ">Action
                                 Categories</span>: <span id="nxw_categories_33"
-                                dir="auto">[VIEW_ACTION_LIST]</span>
+                                dir="auto">[VIEW_ACTION_LIST] -> flags [VIEW_ACTION_LIST]</span>
                             </div>
                             <div>
                               <span class="widgetLabel bold ">Label</span>:
@@ -3440,6 +3575,15 @@ var nxContextPath = "/nuxeo";
                               <span class="widgetLabel bold ">Filters</span>:
                               <span id="nxw_filterIds_14" dir="auto">[view_content,
                                 isNotRoute, display_forum]</span>
+                            </div>
+                            <br />
+                            <div>
+                              <span class="widgetLabel bold ">Currently exists?</span>
+                              <span>yes</span>
+                            </div>
+                            <div>
+                              <span class="widgetLabel bold ">Compat possible?</span>
+                              <span>yes</span>
                             </div>
 
                           </div>
