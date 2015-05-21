@@ -155,6 +155,10 @@ Any number of properties can be used here, and the registration
 currently requires the handler class to exist, but this could be
 changed if needed.
 
+Suggestion from Nelson: if handler class is not mentioned, the system could
+assume the widget is of type "template" and use the corresponding handler by
+default.
+
 A "configuration" element is also useful for Studio export (and
 generation of configuration screens), it will need to be reviewed
 depending on the target metamodel.
@@ -276,7 +280,11 @@ The "categories" and "fields" elements, in particular, will need to be
 reviewed:
 - the category here is confusing since there is already another notion
   of category. It represents a functional marker on the element type.
-- the fields element assumes there is only one input field
+- the fields element currently assumes there is only one input field
+
+Suggestion from Nelson: for the webcomponents use case, there are chances we
+could extract some of this configuration information from the polymer element
+stucture and documentation.
 
 
 ### The "template" special type
@@ -310,6 +318,8 @@ On a document form:
       <translated>true</translated>
       ...
     </element>
+
+Suggestion from Nelson: move these elements as properties (?)
 
 #### Properties
 
@@ -388,6 +398,8 @@ type configuration).
 Similarly to properties, the controls can also accept expressions depending on
 the target rendering technology.
 
+Suggestion from Nelson: rename "controls" to "behaviors"?
+
 #### Binding
 
 Bindings represent the values that the widget will apply to.
@@ -420,7 +432,7 @@ be omitted:
     </element>
 
 By default, the binding named "value" is "inherited" to sub elements (see
-chapter about sub elements). A binding can be marked explicitely as inherited
+chapter about sub elements). A binding can be marked explicitly as inherited
 like this:
 
     <element name="title" category="jsf" type="text">
@@ -455,6 +467,9 @@ This binding notion replaces the "fields" notion on widgets, opening the
 possibility to "named context variables" that are made available to the
 elements context (instead of unnamed field variables field_0, field_1, etc...).
 Bindings with no name will still depend on this naming for compatibility.
+
+Suggestion from Nelson: include the notion of two-way binding (wrt one way
+binding) for optims (?)
 
 
 #### Sub Elements
@@ -520,6 +535,10 @@ syntax is then allowed:
       </subElements>
     </element>
 
+Suggestion from Nelson: name the tag "elements" instead of "subElements".
+Also make the reference implicit (if not type is declared on the element,
+consider it's a reference, for instance).
+
 
 #### Resources
 
@@ -563,6 +582,21 @@ Warning: sometimes resources cannot be looked up dynamically, there are some
 ajax use cases where the head tag will not be re-rendered on JSF current
 behavior. In this case, the new element types should contribute to a "common"
 bundle that is declared and used explicitly on all pages.
+
+Suggestion from Nelson: make it possible to declare resources directly, not
+only bundles, and we could have something like:
+
+    <element-type name="page" category="jsf">
+      ...
+      <resources>
+        <bundle>foldable_box</bundle>
+        <resource>jquery.js</resource>
+      </resources>
+    </element>
+
+Note that in this case, XMap processing will not make it possible to keep
+order of bundle and resource elements (all bundles will be processed first,
+then all resources, for instance).
 
 
 #### Filters
@@ -788,7 +822,7 @@ rendering technology.
 
 Sample JSF example:
 
-    <nxl:widgetType name="textarea" category="jsf" mode="view"
+    <nxl:elementType name="textarea" category="jsf" mode="view"
       value="#{currentRoute.description}"
       styleClass="documentDescription quote" />
 
@@ -810,6 +844,23 @@ in category "webc" and iterate over sub elements to provide the corresponding
 rendering.
 
 TODO: insert Nelson's POC use case here.
+
+### Templating features
+
+Whenever useful, it shoud be possible to still benefit from the underlying
+technology templating features, for instance to override partially the
+rendering.
+
+For instance let's define the templating zone "logo" inside the element type
+displaying the Nuxeo logo.
+
+We should be able to override it by using:
+
+    <nx:element name="logo" category="jsf" mode="view" value="#{currentDocument}">
+      <ui:define name="logo">
+        ... [insert any specific behaviour here, still having access to local variables]
+      </ui:define>
+    </nx:element>
 
 
 ## TODO
